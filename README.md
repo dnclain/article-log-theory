@@ -75,18 +75,42 @@ Par ailleurs, les entêtes censées permettre d'associer les logs répartis sur 
 
 L'application en question étant très sollicitée, la quantité de logs présents rend la lecture encore plus compliquée. Il n'est pas possible de réduire le nombre de logs, mais il devrait être possible d'en faciliter la lecture.
 
-Enfin, une ligne de log ne peut pas être facilement analysé. Par exemple, nous avons voulu extraire le temps de réponse et le nombre de connexion distinctes sur une période données. Pour cela, il a fallu reformaté manuellement les logs d'Accès Web dans un format proche du CSV, puis l'importer dans Excel. 
+Enfin, une ligne de log ne peut pas être facilement analysé. Par exemple, nous avons voulu extraire le temps de réponse et le nombre de connexion distinctes sur une période données. Pour cela, il a fallu reformater manuellement les logs d'Accès Web dans un format proche du CSV, puis l'importer dans Excel. 
 
-Je travaille avec [gitea](https://gitea.io/) depuis quelques temps, et je dois avouer que les logs produits par cette application sont exemplaires. Il y a ni trop ni trop peu d'informations. Il facile d'associer les logs répartis sur 3 fichiers, et aucune information n'est redondante. Cela faisait quelques temps que nous voulions fixer une norme de log, et je crois bien avoir trouvé un excellent modèle.
+Je travaille avec [gitea](https://gitea.io/) depuis quelques temps, et je dois avouer que les logs produits par cette application sont exemplaires. Il y a ni trop ni trop peu d'informations. Il facile d'associer les logs répartis sur 3 fichiers (exceptés pour les logs SQL), et aucune information n'est redondante. Cela faisait quelques temps que nous voulions fixer une norme de 'logging', et je crois bien avoir trouvé une excellente source d'inspiration.
+
+Nous complétons les logs par [javamelody](https://github.com/javamelody/javamelody/wiki) comme outils de monitoring et d'analyse. Nous devrons donc veiller à ne pas reproduire dans les logs ce qui revient à javamelody.
 
 ## Besoins du _développeur_
+IMO, le développeur a besoin de logs sur 3 périodes différentes de la vie du projet :
+
+- En cours de développement
+- Pour le déploiement
+- Pour le traitement des anomalies en production
+
+### Développement
+
+
+### Déploiement
+
+### Anomalies de la production
 
 ## Besoins de la _production_
+### Déploiement
+
+### Gestion des erreurs
 
 ## Besoins du _chef de projet_
+### Anomalies de la production
+
+### Performance
 
 ## Besoins de la _'MOA'_
+### Performance
 
 ## Autres considérations
+### Lisibilité
+### Concision
+### Export vers un outils d'analyse
 
 ## De meilleurs logs en pratique
