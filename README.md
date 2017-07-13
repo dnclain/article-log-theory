@@ -1,6 +1,6 @@
 # bofself-poc-log
 
-Ce projet est une recherche sur la théorie des logs pour les projets informatiques.
+Ce document est une recherche sur la théorie des logs pour les projets informatiques.
 
 La maintenance des projets informatiques nécessite la mise en place de logs, des informations textuelles ou 'traces' qui seront disponibles dans des fichiers, des bases de données, de façon persistantes ou éphémères. Ces données textuelles sont archivées pour consultation, généralement compressées, et sont accessibles à la production, aux développeurs, mais aussi à la chefferie de projet, et à la maîtrise d'ouvrage. Nous verrons au cours de ce document comment les logs peuvent être utiles à ces derniers. 
 
@@ -9,11 +9,11 @@ Il existe une telle diversité de projets informatiques qu'il semble impossible 
 Dans ce document, nous définirons ce qu'est un 'log', les besoins du point de vue de différents acteurs, et enfin nous proposerons une ou plusieurs méthodes (parmis tant d'autres) de mise en place de log.
 
 ## Définition des logs
-Lors d'un voyage, on consigne parfois des faits, on décrit les étapes, on expose ce qu'on a ressenti. On accompagne souvent nos impressions de photos, de cartes ou de vidéos. L'avènement des raisons sociaux a rendu populaire le partage de 'biographies' en ligne, parfois jusqu'à l'agacement de nos destinataires tellement certains de nos 'tweets' sont futiles. Dans d'autres cas, tellement de photos et de vidéos ont été prises que rare sont ceux qui trouve le temps d'organiser le récit de leur voyage. On apprécie alors des services comme Flickr(R) qui organisent automatiquement ces données et simplifie la navigation.
+Lors d'un voyage, on consigne parfois des faits, on décrit les étapes, on expose ce qu'on a ressenti. On accompagne souvent nos impressions de photos, de cartes ou de vidéos. L'avènement des raisons sociaux a rendu populaire le partage de 'biographies' en ligne, parfois jusqu'à l'agacement de nos destinataires tellement certains de nos 'tweets' sont futiles. Dans d'autres cas, tellement de photos et de vidéos ont été prises que rare sont ceux qui trouve le temps d'organiser le récit de leur voyage. On apprécie alors des services comme Flickr(R) qui organisent automatiquement ces médias et simplifie la navigation.
 
-D'une certaine façon, l'utilisation de ces outils mondernes illustre la difficulté de mettre en place des logs de qualité. Un log applicatif est en quelque sorte une autobiographie du déroulement d'une application. La lecture (ou l'analyse) de ce récit doit permettre à un acteur de comprendre ce qui se passe dans l'application.
+D'une certaine façon, l'analogie du voyage illustre la difficulté de mettre en place des logs de qualité. Un log applicatif est en quelque sorte une autobiographie du déroulement d'une application. La lecture (ou l'analyse) de ce récit doit permettre à un acteur de comprendre ce qui se passe dans l'application.
 
-Que doit-on mettre dans le récit d'un voyage ? Tout dépend de l'intention du voyageur *ET* du public visé. On en met pas les mêmes informations quand le récit est pour soi-même, notre famille, nos amis, ou un public d'inconnnu sur Internet. Il en est de même pour les logs. Le récit applicatif doit correspondre au besoin du public visé. Les 'purées' (pour ne pas dire diarrhées...) de logs sont généralement illisibles et inexploitables pour TOUS les acteurs. Ce contenu indigeste et puant est le drame des applicatifs produits par les sociétés de service. Les logs sont souvent générés automatiquement par les frameworks qui sont rarement des modèles de concision. Par ailleurs, le guide du bon petit logger n'est généralement par fournit par le prestataire.
+Que doit-on mettre dans le récit d'un voyage ? Tout dépend de l'intention du voyageur *ET* du public visé. On en met pas les mêmes informations quand le récit est pour soi-même, notre famille, nos amis, ou un public d'inconnnu sur Internet. Il en est de même pour les logs. Le récit applicatif doit correspondre au besoin du public visé. Les 'purées' (pour ne pas dire diarrhées...) de logs sont généralement illisibles et inexploitables pour TOUS les acteurs. Ce contenu indigeste et puant est le drame des applicatifs produits par les sociétés de service. Les logs sont souvent générés automatiquement par les frameworks qui sont rarement des modèles de concision. Encore pire, le guide du bon petit logger n'est généralement par fourni au développeur prestataire.
 
 La plupart des gestionnaires de log propose par défaut des niveaux de logs :
 
@@ -30,21 +30,44 @@ La plupart des gestionnaires de log propose par défaut des niveaux de logs :
 Par un mécanisme de fitrage, on fixe généralement les logs au niveau 'INFO' lorsque l'application est mise en production. On passe au niveau 'DEBUG' quand un comportement inhabituel est détecté et que les logs 'INFO' ne suffisent pas.  
 
 ### Exemple de logs provenant d'un projet de gestion en java : 
+Voici des logs tels qu'extraitent d'un projet. On en tirera quelques leçons juste après :
+
 #### Persistence 
 <pre>
-xxxxxxxx-xxxx|INFOS|SQLEXP|select * from user where id = 2 
-xxxxxxxx-xxxx|DEBUG|DTBDAT|{"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
-xxxxxxxx-xxxx|INFOS|SQLSTS|POOL:2ms PREP:3ms REQT:5ms NETW:10ms TOTL:20ms
+YYYYMMDDHHmmss.SSS DEBUG [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] PersistenceUserImpl - lireUserById(id:2) 
+YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] SQLEXP - select * from user where id = 2 
+YYYYMMDDHHmmss.SSS DEBUG [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] DATA - {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
+YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] STAT - POOL:2ms PREP:3ms REQT:5ms NETW:10ms TOTL:20ms
+...
 </pre>
-#### Service
 
-#### Tâches
+#### User story
+<pre>
+YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] action=PROFIL L'utilisateur affiche son profil 
+YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0002] action=PROFIL [params:id=2,name=Bento,...] L'utilisateur modifie son profil 
+YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0003] action=ACCUEIL L'utilisateur affiche la page d'accueil
+...
+</pre>
 
-#### Navigation
+#### Background process
+<pre>
+YYYYMMDDHHmmss.SSS INFO [CACHE|RG0000001] Démarrage de la mise à jour du cache {{{
+YYYYMMDDHHmmss.SSS DEBUG [CACHE|RG0000001] Town [hash=908798678,id=1,label=Paris,cp=...]
+YYYYMMDDHHmmss.SSS DEBUG [CACHE|RG0000001] Town [hash=908798678,id=2,label=Créteil,cp=...]
+...
+YYYYMMDDHHmmss.SSS INFO [CACHE|RG0000001] }}} Fin de la mise à jour du cache : 15565 ms
+</pre>
 
 #### Accès Web
+<pre>
+YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] action=PROFIL jsp>2ms metier>25ms total>28ms
+...
+</pre>
 
+#### J'ai des logs, et alors ?
+Que penser des logs ci-dessus ? Il ya effectivement tentative de classer et d'organiser les logs, mais il faut le reconnaître, ces logs sont illisibles. Beaucoup d'informations sont redondantes et on a du mal à identifier les informations dont on a vraiment besoin pour la maintenance.
 
+L'application en question étant très sollicité, on est complètement perdu dans la quantité d'informations présentes. 
 
 ## Les logs du point de vue _'développeur'_
 
