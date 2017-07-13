@@ -71,20 +71,22 @@ Que penser des logs ci-dessus ? Il s'agit de ma première tentative d'organiser 
 
 Nous avons tenté de classer, d'organiser et de créer des logs du point de vue utilisateur. Le but recherché était de pouvoir lire les logs comme un roman. Pourtant il faut le reconnaître, ces logs sont illisibles... Beaucoup d'informations sont redondantes et il est difficile de retrouver ce qui est réellement nécessaire pour la maintenance. Par exemple, certaines phrases en langage naturel sont superflues.
 
+Par ailleurs, les entêtes censées permettre d'associer les logs répartis sur plusieurs fichiers sont trop longues.
+
 L'application en question étant très sollicitée, la quantité de logs présents rend la lecture encore plus compliquée. Il n'est pas possible de réduire le nombre de logs, mais il devrait être possible d'en faciliter la lecture.
 
-Enfin, le log ne peut pas être facilement analysé. Par exemple, nous avons voulu extraire le temps de réponse et le nombre de connexion distinctes sur une période données. Pour cela, il a fallu reformaté manuellement les logs d'Accès Web dans un format proche du CSV, puis l'importer dans Excel. 
+Enfin, une ligne de log ne peut pas être facilement analysé. Par exemple, nous avons voulu extraire le temps de réponse et le nombre de connexion distinctes sur une période données. Pour cela, il a fallu reformaté manuellement les logs d'Accès Web dans un format proche du CSV, puis l'importer dans Excel. 
 
-Je travaille sur [gitea](https://gitea.io/) depuis quelques temps, et je dois avouer que les logs produits par cette application sont exemplaires. Cela faisait quelques temps que nous voulions retravailler les log
+Je travaille avec [gitea](https://gitea.io/) depuis quelques temps, et je dois avouer que les logs produits par cette application sont exemplaires. Il y a ni trop ni trop peu d'informations. Il facile d'associer les logs répartis sur 3 fichiers, et aucune information n'est redondante. Cela faisait quelques temps que nous voulions fixer une norme de log, et je crois bien avoir trouvé un excellent modèle.
 
-## Les logs du point de vue _'développeur'_
+## Besoins du _développeur_
 
-## Les logs du point de vue _'responsable de production'_
+## Besoins de la _production_
 
-## Les logs du point de vue _'chef de projet'_
+## Besoins du _chef de projet_
 
-## Les logs du point de vue _'MOA'_
+## Besoins de la _'MOA'_
 
 ## Autres considérations
 
-## La théorie des logs en pratique
+## De meilleurs logs en pratique
