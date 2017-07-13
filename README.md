@@ -9,13 +9,13 @@ Il existe une telle diversité de projets informatiques qu'il semble impossible 
 Dans ce document, nous définirons ce qu'est un 'log', les besoins du point de vue de différents acteurs, et enfin nous proposerons une ou plusieurs méthodes (parmis tant d'autres) de mise en place de log.
 
 ## Définition des logs
-Lors d'un voyage, on consigne parfois des faits, on décrit les étapes, on expose ce qu'on a ressenti. On accompagne souvent nos impressions de photos, de cartes ou de vidéos. L'avènement des raisons sociaux a rendu populaire le partage de 'biographies' en ligne, parfois jusqu'à l'agacement de nos destinataires tellement certains de nos 'tweets' sont futiles. Dans d'autres cas, tellement photos et de vidéos ont été prises qu'on trouve rarement le temps d'organiser le récit de son voyage. On apprécie alors des services comme Flickr(R) qui organisent automatiquement ces données et simplifie la navigation.
+Lors d'un voyage, on consigne parfois des faits, on décrit les étapes, on expose ce qu'on a ressenti. On accompagne souvent nos impressions de photos, de cartes ou de vidéos. L'avènement des raisons sociaux a rendu populaire le partage de 'biographies' en ligne, parfois jusqu'à l'agacement de nos destinataires tellement certains de nos 'tweets' sont futiles. Dans d'autres cas, tellement de photos et de vidéos ont été prises que rare sont ceux qui trouve le temps d'organiser le récit de leur voyage. On apprécie alors des services comme Flickr(R) qui organisent automatiquement ces données et simplifie la navigation.
 
 D'une certaine façon, l'utilisation de ces outils mondernes illustre la difficulté de mettre en place des logs de qualité. Un log applicatif est en quelque sorte une autobiographie du déroulement d'une application. La lecture (ou l'analyse) de ce récit doit permettre à un acteur de comprendre ce qui se passe dans l'application.
 
-Que doit-on mettre dans le récit d'un voyage ? Tout dépend de l'intention du voyageur *ET* du public visé. On en met pas les mêmes informations quand le récit est pour soi, notre famille, nos amis, ou un public d'inconnnu sur Internet. Il en est de même pour les logs. Le récit applicatif doit correspondre au besoin du public visé. Les 'purées' (pour ne pas dire diarrhées...) de logs sont généralement illisibles et inexploitables pour TOUS les acteurs. Ce contenu indigeste et puant est le drame des applicatifs produits par les sociétés de service. Les logs sont souvent générés automatiquement par les frameworks qui sont rarement des modèles de concision. Par ailleurs, le guide du bon petit logger n'est généralement par fournit par le prestataire.
+Que doit-on mettre dans le récit d'un voyage ? Tout dépend de l'intention du voyageur *ET* du public visé. On en met pas les mêmes informations quand le récit est pour soi-même, notre famille, nos amis, ou un public d'inconnnu sur Internet. Il en est de même pour les logs. Le récit applicatif doit correspondre au besoin du public visé. Les 'purées' (pour ne pas dire diarrhées...) de logs sont généralement illisibles et inexploitables pour TOUS les acteurs. Ce contenu indigeste et puant est le drame des applicatifs produits par les sociétés de service. Les logs sont souvent générés automatiquement par les frameworks qui sont rarement des modèles de concision. Par ailleurs, le guide du bon petit logger n'est généralement par fournit par le prestataire.
 
-Heureusement, la plupart des gestionnaire de log propose par défaut des niveaux qu'il est possible de filtrer par configuration :
+La plupart des gestionnaires de log propose par défaut des niveaux de logs :
 
 
 | Niveau   | Destination directe    | Pertinence |
@@ -24,9 +24,25 @@ Heureusement, la plupart des gestionnaire de log propose par défaut des niveaux
 | DEBUG    | Développeur            | Les logs de niveau debug contiennent le suivi pas à pas d'un algorithme avec les données. Ces logs doivent être pertinents et écrits en pensant à la maintenance. Le niveau de verbosité est relatif.    |
 | INFO     | Developpeur/Autorité   | Les logs de niveau info constitue note récit applicatif. La lecture du log info devrait suffire à savoir ce qui s'est passé dans l 'aplication       |
 | WARN     | Exploitant             | Les warnings indiquent qu'un traitement a pu se faire, mais qu'il aurait pu être optimisé. **Les exploitants pensent qu'ils doivent intervenir dès qu'ils rencontrent un log de ce type**.        |
-| ERROR    | Exploitant/Développeur | Les erreurs indiquent q'un traitement n'a pas pu se terminer correctement. Il s'agit toujours d'erreur technique (un fichier non trouvé, une base de données inaccessible, problème de droit, etc...). _Les erreurs fonctionnels sont de niveau INFO_. **L'exploitant pense qu'il doit intervenir quand il voit passer un tel message de log**. Les erreurs contiennent généralement la pile d'appel, ce qui est très utile pour les développeurs.    |
+| ERROR    | Exploitant/Développeur | Les erreurs indiquent q'un traitement n'a pas pu se terminer correctement. Il s'agit toujours d'erreur technique (un fichier non trouvé, une base de données inaccessible, problème de droit, etc...). _Les erreurs fonctionnels sont de niveau INFO_. **L'exploitant intervient rapidement quand il voit passer des erreurs**. Les erreurs contiennent généralement la pile d'appel, ce qui est très utile pour les développeurs.    |
 | FATAL    | Exploitant             | L'erreur fatale indique que l'application n'a pas pu démarrer ou a du s'arrêter brusquement, suite à une erreur irrécupérable. **L'exploitant intervient immédiatement quand il a une erreur FATAL.**      |
 
+Par un mécanisme de fitrage, on fixe généralement les logs au niveau 'INFO' lorsque l'application est mise en production. On passe au niveau 'DEBUG' quand un comportement inhabituel est détecté et que les logs 'INFO' ne suffisent pas.  
+
+### Exemple de logs provenant d'un projet de gestion en java : 
+#### Persistence 
+<pre>
+xxxxxxxx-xxxx|INFOS|SQLEXP|select * from user where id = 2 
+xxxxxxxx-xxxx|DEBUG|DTBDAT|{"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
+xxxxxxxx-xxxx|INFOS|SQLSTS|POOL:2ms PREP:3ms REQT:5ms NETW:10ms TOTL:20ms
+</pre>
+#### Service
+
+#### Tâches
+
+#### Navigation
+
+#### Accès Web
 
 
 
