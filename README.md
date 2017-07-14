@@ -35,36 +35,36 @@ Des librairies de logs fournissent les outils pour créer ses propres niveaux de
 Voici des logs tels qu'extraitent d'un projet. Tiron-en quelques leçons juste après :
 
 #### Persistence 
-<pre>
+```
 YYYYMMDDHHmmss.SSS DEBUG [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] PersistenceUserImpl - lireUserById(id:2) 
 YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] SQLEXP - select * from user where id = 2 
 YYYYMMDDHHmmss.SSS DEBUG [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] DATA - {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
 YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] STAT - POOL:2ms PREP:3ms REQT:5ms NETW:10ms TOTL:20ms
 ...
-</pre>
+```
 
 #### User story
-<pre>
+```
 YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] action=PROFIL L'utilisateur affiche son profil 
 YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0002] action=PROFIL [params:id=2,name=Bento,...] L'utilisateur modifie son profil 
 YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0003] action=ACCUEIL L'utilisateur affiche la page d'accueil
 ...
-</pre>
+```
 
 #### Background process
-<pre>
+```
 YYYYMMDDHHmmss.SSS INFO [CACHE|RG0000001] Démarrage de la mise à jour du cache {{{
 YYYYMMDDHHmmss.SSS DEBUG [CACHE|RG0000001] Town [hash=908798678,id=1,label=Paris,cp=...]
 YYYYMMDDHHmmss.SSS DEBUG [CACHE|RG0000001] Town [hash=908798678,id=2,label=Créteil,cp=...]
 ...
 YYYYMMDDHHmmss.SSS INFO [CACHE|RG0000001] }}} Fin de la mise à jour du cache : 15565 ms
-</pre>
+```
 
 #### Accès Web
-<pre>
+```
 YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] action=PROFIL jsp>2ms metier>25ms total>28ms
 ...
-</pre>
+```
 
 #### J'ai des logs, et alors ?
 Que penser des logs ci-dessus ? Il s'agit de ma première tentative d'organiser les logs. En effet, dans notre équipe, aucune règle de log existait. Il fallait bien commencer par quelque chose. 
@@ -89,11 +89,79 @@ IMO, le développeur a besoin de logs sur 3 périodes différentes de la vie du 
 - Pour le traitement des anomalies en production
 
 ### Développement
+Le développeur est responsable de l'écriture des logs. Comme indiqué plus haut, il écrit :
+- Des logs de niveau TRACE (ou traces) pendant l'écriture de son code. Ces logs sont l'équivalent des brouillons que l'on fait avant de rédiger un document.
 
+``` java
+log.trace("Etape 1 : Suppression de l'entrée {} d'id {}", entry, id);
+```
+Pour ce niveau de log, il est préférable de choisir une librairie qui ne traite les logs que si le niveau TRACE est activé, sous peine de plomber les performances. Pour les librairies anciennes comme log4j 1.2, il vaut mieux faire :
+
+``` java
+if (log.isTraceEnabled()) {
+	log.trace("Etape 1 : Suppression de l'entrée " + entry + " d'id " + id);
+}
+```
+En effet, les traces sont généralement très nombreuses, ils peuvent sérieusement consommer du temps CPU et amoindrir les performances de l'application.
+
+- Des logs DEBUG pour analyser ses algorithmes. Ces logs *DOIVENT* être soignés. Ils sont l'équivalent des notes contenues dans un carnet de voyage.
+
+``` java
+log.debug("Lecture du fichier {} terminée. Taille:{}", fileName, size);
+```
+De même, les logs debug peuvent être assez nombreuses. L'utilisation de `log.isDebugEnabled()` ou d'une librairie qui teste si le niveau DEBUG est actif préservera les performances.
+
+- Des logs INFO pour présenter le résultat d'un traitement. C'est eux le 'récit public' de notre voyage.
+
+``` java
+log.info("Nouvel utilisateur soumis : {}", newUser);
+// traitement
+log.info("Soumission utilisateur : {}", result);
+```
+
+La lecture des logs infos permet de savoir précisément les actions utilisateur et la réponse de l'application. Sa lecture doit permettre de suivre une utilisateur. Les erreurs fonctionnelles sont de niveau INFO. Il convient d'éviter les redondances, et d'être concis. Une information qui peut être déduite n'a pas besoin d'être détaillées textuellement. 
+
+- Des logs WARN pour attirer la vigilance de la production. La présence de WARN interpelle forcément la production. Ces logs doivent donc être soignés et ciblés.
+  
+```java
+log.warn("Encodage non spécifié, l'encodage par défaut sélectionné {}", config.getEncoding());
+```
+On a parfois tendance à créer des logs de niveau WARN lorsqu'un traitement rencontre une 'erreur' qu'il est capable de gérer. Ce n'est pas un warning. Une erreur prévisible fonctionnelle ou non rencontrée lors d'un traitement devrait être de niveau INFO . Comment bien choisir ce qui doit être de niveau WARN ? Examinons les cas suivants : 
+
+1. Avertir de la non présence d'un fichier optionnel
+2. Averissements fonctionnels
+3. Données issues de la BD incomplètes
+4. Indiquer des dégradations de perfomances
+
+Parmis ces 4 situations, lequelles sont des logs de niveau WARN ? La 1, 3 et la 4. En effet, la 2 n'intéresse pas l'exploitation et doit être de niveau INFO (il s'agit du résultat d'un traitement). 
+
+- Des logs ERROR pour avertir la production. En plus d'un message, ils doivent comporter des stacktraces pour faciliter la compréhension de l'erreur. C'est généralement la production qui repère les erreurs. Elle peut toutetefois donner un accès aux logs aux développeurs.
+
+``` java
+log.error("Lecture du fichier du résultat {} impossible, exception, viewFileName);
+```
+Les erreurs sont principalement de nature techniques, et concerne en majorité des exceptions de type Runtime. Une erreur est le résultat d'une impossibilité de terminer un traitement par suite d'un imprévu technique. Par exemple :
+
+1. Erreur d'accès à la base de données
+2. NullPointerException, ou plus généralement RuntimeException
+3. Contrat d'appel non respecté d'une méthode ou d'un service
+4. Données d'entrée incorrecte.
+
+Nous avons choisit de faire produire les messages d'erreur les plus connus par le socle applicatif que nous avons développés. Les cas d'erreurs sont connus, et une solution est proposée. 
+
+- Des logs FATAL pour indiquer des éléments manquants qui empêche le démarrage ou le bon fonctinnement de l'application.
+
+``` java
+log.fatal("Impossible de trouver le fichier de configuraiton {}", configFileName);
+```
+
+Un log FATAL précède généralement un `System.exit(errorCode);`
 
 ### Déploiement
+Le développeur a besoin des logs de niveau FATAL, et des logs de DEBUG généraux qui sont envoyé sur la sortie standard.
 
 ### Anomalies de la production
+En production, c'est généralement la stacktrace 
 
 ## Besoins de la _production_
 ### Déploiement
@@ -105,12 +173,15 @@ IMO, le développeur a besoin de logs sur 3 périodes différentes de la vie du 
 
 ### Performance
 
-## Besoins de la _'MOA'_
+## Besoins de la _MOA_ et des _autorités_
 ### Performance
 
 ## Autres considérations
 ### Lisibilité
 ### Concision
 ### Export vers un outils d'analyse
+### Niveau de logs supplémentaires
+#### Début et fin de traitement
+#### User story (Given, When, Then)
 
 ## De meilleurs logs en pratique
