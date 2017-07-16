@@ -35,7 +35,7 @@ Des librairies de logs fournissent les outils pour créer ses propres niveaux de
 Voici des logs tels qu'extraitent d'un projet. Tiron-en quelques leçons juste après :
 
 #### Persistence 
-```
+```text
 YYYYMMDDHHmmss.SSS DEBUG [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] PersistenceUserImpl - lireUserById(id:2) 
 YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] SQLEXP - select * from user where id = 2 
 YYYYMMDDHHmmss.SSS DEBUG [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] DATA - {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
@@ -44,7 +44,7 @@ YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000
 ```
 
 #### User story
-```
+```text
 YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] action=PROFIL L'utilisateur affiche son profil 
 YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0002] action=PROFIL [params:id=2,name=Bento,...] L'utilisateur modifie son profil 
 YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0003] action=ACCUEIL L'utilisateur affiche la page d'accueil
@@ -52,7 +52,7 @@ YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000
 ```
 
 #### Background process
-```
+```text
 YYYYMMDDHHmmss.SSS INFO [CACHE|RG0000001] Démarrage de la mise à jour du cache {{{
 YYYYMMDDHHmmss.SSS DEBUG [CACHE|RG0000001] Town [hash=908798678,id=1,label=Paris,cp=...]
 YYYYMMDDHHmmss.SSS DEBUG [CACHE|RG0000001] Town [hash=908798678,id=2,label=Créteil,cp=...]
@@ -61,7 +61,7 @@ YYYYMMDDHHmmss.SSS INFO [CACHE|RG0000001] }}} Fin de la mise à jour du cache : 
 ```
 
 #### Accès Web
-```
+```text
 YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] action=PROFIL jsp>2ms metier>25ms total>28ms
 ...
 ```
@@ -254,7 +254,7 @@ Les données n'ont pas besoin d'être répliquées d'un fichier à l'autre. La c
 ### Lisibilité
 Les logs deviennent ilisibles quand aucun effort n'est fait pour formater le document, ou quand des données superflues sont ajoutées. Prenons par exemple le cas de l'exemple ci-dessous, le fichier persistence déjà décrit plus haut. :
 
-```
+```text
 YYYYMMDDHHmmss.SSS DEBUG [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] PersistenceUserImpl - lireUserById(id:2) 
 YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] SQLEXP - select * from user where id = 2 
 YYYYMMDDHHmmss.SSS DEBUG [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] DATA - {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
@@ -269,7 +269,7 @@ Plusieurs informations sont inutiles et empêchent la lisibilité.
 
 Cela pourrait donner :
 
-```
+```text
 YYYYMMDDHHmmss.SSS|DEBUG|0000001|PersistenceUserImpl|lireUserById(id:2) 
 YYYYMMDDHHmmss.SSS|INFO|0000001|SQLEXP| select * from user where id = 2 
 YYYYMMDDHHmmss.SSS|DEBUG|0000001|DATA| {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
@@ -282,7 +282,7 @@ C'est quand même un peu plus clair non ?
 ### Concision
 La concision permet d'économiser encore de l'espace pour faciliter la lecture. Si je reprends l'exemple ci-dessus :
 
-```
+```text
 YYYYMMDDHHmmss.SSS|D|0000001|PUI   | lireUserById(id:2) 
 YYYYMMDDHHmmss.SSS|I|0000001|SQLEXP| select * from user where id = 2 
 YYYYMMDDHHmmss.SSS|D|0000001|SQLDAT| {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
@@ -291,7 +291,7 @@ YYYYMMDDHHmmss.SSS|I|0000001|SQLSTA| OK | POOL |2|ms| PREP |3|ms| REQT |5|ms| NE
 ```
 Cela améliore encore sensiblement la lisibilité. Si la notion de temps n'est pas indispensable, cela donne :
 
-```
+```text
 D|0000001|PUI   | lireUserById(id:2) 
 I|0000001|SQLEXP| select * from user where id = 2 
 D|0000001|SQLDAT| {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
