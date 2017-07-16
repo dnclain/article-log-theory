@@ -321,6 +321,7 @@ Il est parfois pratique d'ajouter des niveaux de log supplémentaires en plus de
 Certaines applications ajoutent des niveaux comme NOTICE, COMMENT, etc.
 
 Il est même possible de modifier les logs par défaut, en modifiant leur nom :
+
 |Nom de départ|Nom d'arrivée|
 |-------------|-------------|
 |TRACE|CODE|
