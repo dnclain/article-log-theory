@@ -342,7 +342,8 @@ log.fail(funcId, exception)
 ```
 
 #### User story (Given, When, Then)
-Les userstory sont une façon de représenter. Ils peuvent s'appliquer à la navigation, mais aussi à tous type de traitement nécessite les 4 étapes :
+Les userstory sont une façon de représenter un test ou un traitement. Ils peuvent s'appliquer à la navigation, mais aussi à tout type de traitement qui nécessite les 4 étapes :
+
 1. Setup
 2. Exercise
 3. Verfy
