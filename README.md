@@ -126,7 +126,7 @@ La lecture des logs infos permet de savoir précisément les actions utilisateur
 ```java
 log.warn("Encodage non spécifié, l'encodage par défaut sélectionné {}", config.getEncoding());
 ```
-On a parfois tendance à créer des logs de niveau WARN lorsqu'un traitement rencontre une 'erreur' qu'il est capable de gérer. Ce n'est pas un warning. Une erreur prévisible fonctionnelle ou non rencontrée lors d'un traitement devrait être de niveau INFO . Comment bien choisir ce qui doit être de niveau WARN ? Examinons les cas suivants : 
+On a parfois tendance à créer des logs de niveau WARN lorsqu'un traitement rencontre une 'erreur' qu'il est capable de gérer. Ce n'est pas un warning. Une erreur fonctionnelle prévisible devrait être de niveau INFO . Comment bien choisir ce qui doit être de niveau WARN ? Examinons les cas suivants : 
 
 1. Avertir de la non présence d'un fichier optionnel
 2. Averissements fonctionnels
@@ -145,9 +145,9 @@ Les erreurs sont principalement de nature techniques, et concerne en majorité d
 1. Erreur d'accès à la base de données
 2. NullPointerException, ou plus généralement RuntimeException
 3. Contrat d'appel non respecté d'une méthode ou d'un service
-4. Données d'entrée incorrecte.
+4. Données incorrectes.
 
-Nous avons choisit de faire produire les messages d'erreur les plus connus par le socle applicatif que nous avons développés. Les cas d'erreurs sont connus, et une solution est proposée. 
+Nous avons choisit de faire produire les messages d'erreur les plus connus par le socle applicatif. Les cas d'erreurs sont connus, et une solution précuite est proposée. 
 
 - Des logs FATAL pour indiquer des éléments manquants qui empêche le démarrage ou le bon fonctinnement de l'application.
 
@@ -161,27 +161,187 @@ Un log FATAL précède généralement un `System.exit(errorCode);`
 Le développeur a besoin des logs de niveau FATAL, et des logs de DEBUG généraux qui sont envoyé sur la sortie standard.
 
 ### Anomalies de la production
-En production, c'est généralement la stacktrace 
+En production, c'est généralement la stacktrace de logs de niveaux WARN et ERROR qui nous intéresse, ainsi que les logs de niveau INFO. Les logs DEBUG sont activés si le développeur ne s'y retrouve pas.
 
 ## Besoins de la _production_
+En production, les seuls logs utiles sont de niveau WARN, ERROR et FATAL.
+
 ### Déploiement
+Lors du déploiement sur la recette et/ou la production, l'application devrait émettre de logs de niveau FATAL qui indiquent que des règles de déploiement n'ont pas été respectées. Ces logs devraient contenir également une proposition de solution.
 
 ### Gestion des erreurs
+La production utilise toujours un outils de monitoring, comme Racvision dans l'éducation nationale, pour s'assurer de l'état de santé d'une application. Elle a également des outils qui analysent les logs et mettent en évidence ceux au-dessus du niveau WARN.
+
+L'application devrait :
+- Indiquer dans Racvision (ou tout outil similaire) tous les points d'écoute susceptibles de générer des erreurs (base de données, consommation mémoire, etc..)
+- Indiquer ces mêmes messages du niveau approprié dans les logs.
 
 ## Besoins du _chef de projet_
+IMO, le chef de projet a besoin de savoir si l'application répond bien aux actions utilisateurs. Il a besoin d'un état de santé, et de statistiques sur les performances de l'application. Il a besoin de savoir la fréquence des erreurs rencontrées. Ces données pourront être transmises à sa hiérarchie.
+ 
 ### Anomalies de la production
 
 ### Performance
+Le temps de réponse instannée, la consommation mémoire, soit l'état de santé générale de l'application peuvent généralement être fournis par des outils comme JavaMelody. Toutefois certaines données auraient intérêt à se retrouver dans les logs, comme le temps de réponse, la consommation mémoire, etc, données qui pourront ête interrogées plus tard pour établir un historique.
+
+Afin de faciliter l'extraction de ces données, celles-ci ont intérêts à avoir un format facile à traiter. Par exemple le format UNL.
+Reprenons les logs 'Accès Web' que nous avons vus plus haut :
+
+```java
+YYYYMMDDHHmmss.SSS|INFO|IP|10.0.0.1,192.168.0.217|RG|0000001|SH|username|000000000000|RS|0001|PROFIL|VW|2|ms|BS|25|ms|TTL|28|ms
+```
 
 ## Besoins de la _MOA_ et des _autorités_
+Les applications de gestion ont parfois une valeur légale. Il nous faut rendre des comptes à des syndicats, des policiers et aux politiques. Les besoins sont généralement statistiques, mais peuvent concerner des déroulements complets de comportement utilisateurs, notamment lors de litiges ou de plaintes.
+ 
 ### Performance
+La MOA est intéressée par des statistiques métiers, comme cela :
+
+* Nombre de connexion distinctes sur une période donnée
+* Nombre de connexion globale 
+* Temps de réponse
+* Nombre de dossiers traités sur une période
+* ...
+
+En loggant correctement le comportement métier, il est possible de fournir très simplement ce genre de statistique.
+
+### Comportement utilisateur
+Les autorités ont parfois besoin de savoir :
+
+* L'adresse IP réelle (derrière un proxy par exemple)
+* Les opérations effectuées par un utilisateur donné
+* Les données manipulées
+
+Ainsi, les logs de niveau INFO doivent contenir ces informations, de façon à pouvoir être lu comme un roman. Les données insérées ou mises à jour doivent être loggées de façon à pouvoir défaire les opérations si nécessaires.
 
 ## Autres considérations
+### Catégories de logs
+Les applications n-tiers structurés à l'aide de pattern ont généralement (plus ou moins) les couches suivantes :
+
+0. L'utilisateur (navigateur ou desktop)
+1. La vue
+2. La commande
+3. Le contrôleur
+4. Une couche de transport (optionnelle)
+4. Le service
+5. La persistence
+6. Les DAO
+7. La connexion à la base de données
+8. D'eventuels périphériques (imprimantes, périphériques connectés, etc...), ou traitements asynchrones.
+
+Chaque couche jourera un rôle différent dans la production de logs. 
+
+En fonction des besoins détaillés plus haut dans le document, il en ressort les catégories suivantes :
+- Protocole HTTP ou autre (clic sur la Vue)
+- Commande utilisateur (les opérations demandées, et les données envoyées ou reçus).
+- La couche transport si présente (la couche transport sert à implémenter les protocoles d'appels RPC)
+- Les services appelés
+- Les persistence (SQL, données modifiées).
+- Un fichier par périphérique, ou par traitement
+- Les erreurs
+
+Une ou plusieurs catégories peut être envoyé dans un même fichier, ou un fichier distinct :
+- http ou view
+- userstory
+- transport
+- business
+- persistence (catégories : sqlstat, sqldata, sqlexp)
+- error
+- cache, device-xxx, resultat
+
+Les données n'ont pas besoin d'être répliquées d'un fichier à l'autre. La combinaison des données entre les fichiers permet de déduire et de retrouver les informations. 
+
 ### Lisibilité
+Les logs deviennent ilisibles quand aucun effort n'est fait pour formater le document, ou quand des données superflues sont ajoutées. Prenons par exemple le cas de l'exemple ci-dessous, le fichier persistence déjà décrit plus haut. :
+
+```
+YYYYMMDDHHmmss.SSS DEBUG [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] PersistenceUserImpl - lireUserById(id:2) 
+YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] SQLEXP - select * from user where id = 2 
+YYYYMMDDHHmmss.SSS DEBUG [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] DATA - {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
+YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] STAT - POOL:2ms PREP:3ms REQT:5ms NETW:10ms TOTL:20ms
+...
+```
+
+Plusieurs informations sont inutiles et empêchent la lisibilité.
+1. Les notions de temps, de niveau de log, d'ip, de session ne sont pas obligatoire dans un fichier de persistence.
+2. L'ordre d'apparition suffit. 
+3. Pour faciliter les relations entre les fichiers, il est possible de conserver le numéro de requête global. Eventuellement le niveau de log.
+
+Cela pourrait donner :
+
+```
+YYYYMMDDHHmmss.SSS|DEBUG|0000001|PersistenceUserImpl|lireUserById(id:2) 
+YYYYMMDDHHmmss.SSS|INFO|0000001|SQLEXP| select * from user where id = 2 
+YYYYMMDDHHmmss.SSS|DEBUG|0000001|DATA| {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
+YYYYMMDDHHmmss.SSS|INFO|0000001|STAT|POOL|2|ms|PREP|3|ms|REQT|5|ms|NETW|10|ms|TOTL|20|ms
+...
+```
+
+C'est quand même un peu plus clair non ?
+
 ### Concision
-### Export vers un outils d'analyse
+La concision permet d'économiser encore de l'espace pour faciliter la lecture. Si je reprends l'exemple ci-dessus :
+
+```
+YYYYMMDDHHmmss.SSS|D|0000001|PUI   | lireUserById(id:2) 
+YYYYMMDDHHmmss.SSS|I|0000001|SQLEXP| select * from user where id = 2 
+YYYYMMDDHHmmss.SSS|D|0000001|SQLDAT| {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
+YYYYMMDDHHmmss.SSS|I|0000001|SQLSTA| OK | POOL |2|ms| PREP |3|ms| REQT |5|ms| NETW |10|ms| TOTL |20|ms
+...
+```
+Cela améliore encore sensiblement la lisibilité. Si la notion de temps n'est pas indispensable, cela donne :
+
+```
+D|0000001|PUI   | lireUserById(id:2) 
+I|0000001|SQLEXP| select * from user where id = 2 
+D|0000001|SQLDAT| {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
+I|0000001|SQLSTA| OK | POOL |2|ms| PREP |3|ms| REQT |5|ms| NETW |10|ms| TOTL |20|ms
+...
+```
+
+### Import par un outils d'analyse
+Cela se fait en 2 temps :
+* Filtrage par catégorie de log
+* Import dans un outils, par exemple un tableur
+
+A condition que le format soit de type CSV (ou UNL), il est possible d'importer ces données dans Excel comme suit :
+1. Renommer le fichier en .csv
+2. Ajouter une ligne au début du fichier: 
+
+```text
+sep=|
+```
+
+3. Ouvrir le fichier avec Excel
+
+Prendre un tableau croisé dynamique pour faire des graphiques et des calculs sur des ensembles de données.
+
 ### Niveau de logs supplémentaires
+Il est parfois pratique d'ajouter des niveaux de log supplémentaires en plus des 5 suivants : TRACE, DEBUG, INFO, ERROR, FATAL.
+Certaines applications ajoutent des niveaux comme NOTICE, COMMENT, etc.
+
+Il est même possible de modifier les logs par défaut, en modifiant leur nom :
+|Nom de départ|Nom d'arrivée|
+|-------------|-------------|
+|TRACE|CODE|
+|DEBUG|ALGO|
+|-------------|-------------|
+
+Afin de garder une cohérence avec d'autres projets, nous préférons utiliser les catégories de logs, plutôt que des niveaux de logs supplémentaires. Par contre, nous avons voulu en faciliter l'utilisation en proposant une API dédiée pour les cas suivants : 
+
 #### Début et fin de traitement
+```java
+FuncId func = log.startFunc("Ajout de PJ de type {}, de nom {} et de taille {} Mo", fileType, fileName, fileSizeMB);
+// traitement
+log.done(fundId, "Ajout {} OK.", fileName)
+// ou 
+log.success(funcId)
+// ou
+log.fail(funcId)
+```
+
 #### User story (Given, When, Then)
+```java
+```
 
 ## De meilleurs logs en pratique
