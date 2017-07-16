@@ -337,11 +337,25 @@ log.done(fundId, "Ajout {} OK.", fileName)
 // ou 
 log.success(funcId)
 // ou
-log.fail(funcId)
+log.fail(funcId, exception)
 ```
 
 #### User story (Given, When, Then)
+Les userstory sont une façon de représenter. Ils peuvent s'appliquer à la navigation, mais aussi à tous type de traitement nécessite les 4 étapes :
+1. Setup
+2. Exercise
+3. Verfy
+4. Teardown
+
 ```java
+// Setup
+log.given("Paramètres : id={},name={},surname={}", param1, param2, param3);
+// Exercise
+log.when(req.getParam("action"));
+// traitement
+// Verify
+log.then("Success");
+// Teardown
 ```
 
 ## De meilleurs logs en pratique
