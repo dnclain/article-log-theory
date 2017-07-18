@@ -307,14 +307,12 @@ Cela se fait en 2 temps :
 A condition que le format soit de type CSV (ou UNL), il est possible d'importer ces données dans Excel comme suit :
 1. Renommer le fichier en .csv
 2. Ajouter une ligne au début du fichier: 
-
-```text
-sep=|
-```
-
+	
+	sep=|
+	
 3. Ouvrir le fichier avec Excel
 
-Prendre un tableau croisé dynamique pour faire des graphiques et des calculs sur des ensembles de données.
+Enfin, créer un tableau croisé dynamique pour faire des graphiques et des calculs sur des ensembles de données.
 
 ### Niveau de logs supplémentaires
 Il est parfois pratique d'ajouter des niveaux de log supplémentaires en plus des 5 suivants : TRACE, DEBUG, INFO, ERROR, FATAL.
@@ -346,18 +344,62 @@ Les userstory sont une façon de représenter un test ou un traitement. Ils peuv
 
 1. Setup
 2. Exercise
-3. Verfy
+3. Verify
 4. Teardown
 
 ```java
 // Setup
-log.given("Paramètres : id={},name={},surname={}", param1, param2, param3);
+log.given("Session : {}", sessionHash);
+log.given("Paramètres : {}", io.getParamValues());
 // Exercise
-log.when(req.getParam("action"));
+log.when(io.getParam("action"));
 // traitement
 // Verify
 log.then("Success");
 // Teardown
 ```
 
+Ce qui pourrait donner :
+
+```text
+@GIVEN Session : -978897675
+@Given Paramètres : [2,CONSULTERPJ]
+ >When CONSULTERPJ
+  -Then Success
+```
+
 ## De meilleurs logs en pratique
+Au vu des éléments ci-dessus, il se dégage les quelques principes suivants :
+
+### Classer les catégorie de logs par fichier
+#### http.log
+Ce fichier contriendra les accès http lorsqu'il s'agit d'un application WEB. Il doit contenir la date, le numéro de requête, la méthode utilisée, la ressource demandée et des statistiques de temps de réponse. Lorsque le socle est maîtrisé, il est possible d'ajouter les informations de session et le numéro de requête session. Nous avons choisi de procéder en 2 temps :
+
+```text
+YYYYMMDD HHmmss.SSS|I|0000001| HTTP | IP |10.0.0.1,192.168.0.217| SN |username|000000000000| RS |0001| GET /servlet?action=PROFIL
+YYYYMMDD HHmmss.SSS|I|0000001| STAT | BS |25|ms| VW |2|ms| TL |28|ms
+...
+```
+à partir de ce fichier, on récupère tous les numéros de requêtes d'une session, 
+
+#### userstory.log
+Ce fichier contiendra le comportement utilisateur. Il doit contenir les actions demandées, la date, le numéro de requête, les paramètres d'entrée et le résultat du traitement.
+
+```text
+YYYYMMDD HHmmss.SSS|I|0000001| ACTION | PROFIL |{"id"=3, "group"="GSP"}
+YYYYMMDD HHmmss.SSS|I|0000001| RESULT | OK |xxx.jsp
+YYYYMMDD HHmmss.SSS|D|0000001| DATA   | {...} <-- données sérialisées à afficher en DEBUG.
+YYYYMMDD HHmmss.SSS|E|0000002| RESULT | KO |Action incorrecte
+...
+```
+
+#### transport.log ou http.log
+Ce fichier contiendra le comportement de la couche de service, quand un protole R. Il doit contenir les actions demandées, la date, le numéro de requête, les paramètres d'entrée et le résultat du traitement.
+
+```text
+YYYYMMDD HHmmss.SSS|I|0000001| ACTION | PROFIL |{"id"=3, "group"="GSP"}
+YYYYMMDD HHmmss.SSS|I|0000001| RESULT | OK |xxx.jsp
+YYYYMMDD HHmmss.SSS|D|0000001| DATA   | {...} <-- données sérialisées à afficher en DEBUG.
+YYYYMMDD HHmmss.SSS|E|0000002| RESULT | KO |Action incorrecte
+...
+```
