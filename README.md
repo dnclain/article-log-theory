@@ -77,7 +77,7 @@ L'application en question étant très sollicitée, la quantité de logs présen
 
 Enfin, une ligne de log ne peut pas être facilement analysé. Par exemple, nous avons voulu extraire le temps de réponse et le nombre de connexion distinctes sur une période données. Pour cela, il a fallu reformater manuellement les logs d'Accès Web dans un format proche du CSV, puis l'importer dans Excel. 
 
-Je travaille avec [gitea](https://gitea.io/) depuis quelques temps, et je dois avouer que les logs produits par cette application sont exemplaires. Il y a ni trop ni trop peu d'informations. Il facile d'associer les logs répartis sur 3 fichiers (exceptés pour les logs SQL), et aucune information n'est redondante. Cela faisait quelques temps que nous voulions fixer une norme de 'logging', et je crois bien avoir trouvé une excellente source d'inspiration.
+Je travaille avec [gitea](https://gitea.io/) depuis quelques temps, et je dois avouer que les logs produits par cette application sont exemplaires. Il y a ni trop ni trop peu d'informations. Il est facile d'associer les logs répartis sur 3 fichiers (exceptés pour les logs SQL), et aucune information n'est redondante. Cela faisait quelques temps que nous voulions fixer une norme de 'logging', et je crois bien avoir trouvé une excellente source d'inspiration.
 
 Nous complétons les logs par [javamelody](https://github.com/javamelody/javamelody/wiki) comme outils de monitoring et d'analyse. Nous devrons donc veiller à ne pas reproduire dans les logs ce qui revient à javamelody.
 
@@ -282,19 +282,19 @@ C'est quand même un peu plus clair non ?
 La concision permet d'économiser encore de l'espace pour faciliter la lecture. Si je reprends l'exemple ci-dessus :
 
 ```text
-YYYYMMDDHHmmss.SSS| D |0000001|PUI   | lireUserById(id:2) 
-YYYYMMDDHHmmss.SSS| I |0000001|SQLEXP| select * from user where id = 2 
-YYYYMMDDHHmmss.SSS| D |0000001|SQLDAT| {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
-YYYYMMDDHHmmss.SSS| I |0000001|SQLSTA| OK | POOL |2|ms| PREP |3|ms| REQT |5|ms| NETW |10|ms| TOTL |20|ms
+YYYYMMDDHHmmss.SSS| D |0000001| PUI    | lireUserById(id:2) 
+YYYYMMDDHHmmss.SSS| I |0000001| SQLEXP | select * from user where id = 2 
+YYYYMMDDHHmmss.SSS| D |0000001| SQLDAT | {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
+YYYYMMDDHHmmss.SSS| I |0000001| SQLSTA | OK | POOL |2|ms| PREP |3|ms| REQT |5|ms| NETW |10|ms| TOTL |20|ms
 ...
 ```
 Cela améliore encore sensiblement la lisibilité. Si la notion de temps n'est pas indispensable, cela donne :
 
 ```text
-D |0000001|PUI   | lireUserById(id:2) 
-I |0000001|SQLEXP| select * from user where id = 2 
-D |0000001|SQLDAT| {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
-I |0000001|SQLSTA| OK | POOL |2|ms| PREP |3|ms| REQT |5|ms| NETW |10|ms| TOTL |20|ms
+D |0000001| PUI    | lireUserById(id:2) 
+I |0000001| SQLEXP | select * from user where id = 2 
+D |0000001| SQLDAT | {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
+I |0000001| SQLSTA | OK | POOL |2|ms| PREP |3|ms| REQT |5|ms| NETW |10|ms| TOTL |20|ms
 ...
 ```
 
