@@ -36,33 +36,33 @@ Voici des logs tels qu'extraites d'un projet. Juste après, nous en tirerons que
 
 #### Persistence 
 ```text
-YYYYMMDDHHmmss.SSS DEBUG [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] PersistenceUserImpl - lireUserById(id:2) 
-YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] SQLEXP - select * from user where id = 2 
-YYYYMMDDHHmmss.SSS DEBUG [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] DATA - {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
-YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] STAT - POOL:2ms PREP:3ms REQT:5ms NETW:10ms TOTL:20ms
+YYYY-MM-DD_HH:mm:ss.SSS DEBUG [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] PersistenceUserImpl - lireUserById(id:2) 
+YYYY-MM-DD_HH:mm:ss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] SQLEXP - select * from user where id = 2 
+YYYY-MM-DD_HH:mm:ss.SSS DEBUG [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] DATA - {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
+YYYY-MM-DD_HH:mm:ss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] STAT - POOL:2ms PREP:3ms REQT:5ms NETW:10ms TOTL:20ms
 ...
 ```
 
 #### User story
 ```text
-YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] action=PROFIL L'utilisateur affiche son profil 
-YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0002] action=PROFIL [params:id=2,name=Bento,...] L'utilisateur modifie son profil 
-YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0003] action=ACCUEIL L'utilisateur affiche la page d'accueil
+YYYY-MM-DD_HH:mm:ss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] action=PROFIL L'utilisateur affiche son profil 
+YYYY-MM-DD_HH:mm:ss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0002] action=PROFIL [params:id=2,name=Bento,...] L'utilisateur modifie son profil 
+YYYY-MM-DD_HH:mm:ss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0003] action=ACCUEIL L'utilisateur affiche la page d'accueil
 ...
 ```
 
 #### Background process
 ```text
-YYYYMMDDHHmmss.SSS INFO [CACHE|RG0000001] Démarrage de la mise à jour du cache {{{
-YYYYMMDDHHmmss.SSS DEBUG [CACHE|RG0000001] Town [hash=908798678,id=1,label=Paris,cp=...]
-YYYYMMDDHHmmss.SSS DEBUG [CACHE|RG0000001] Town [hash=908798678,id=2,label=Créteil,cp=...]
+YYYY-MM-DD_HH:mm:ss.SSS INFO [CACHE|RG0000001] Démarrage de la mise à jour du cache {{{
+YYYY-MM-DD_HH:mm:ss.SSS DEBUG [CACHE|RG0000001] Town [hash=908798678,id=1,label=Paris,cp=...]
+YYYY-MM-DD_HH:mm:ss.SSS DEBUG [CACHE|RG0000001] Town [hash=908798678,id=2,label=Créteil,cp=...]
 ...
-YYYYMMDDHHmmss.SSS INFO [CACHE|RG0000001] }}} Fin de la mise à jour du cache : 15565 ms
+YYYY-MM-DD_HH:mm:ss.SSS INFO [CACHE|RG0000001] }}} Fin de la mise à jour du cache : 15565 ms
 ```
 
 #### Accès Web
 ```text
-YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] action=PROFIL jsp>2ms metier>25ms total>28ms
+YYYY-MM-DD_HH:mm:ss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] action=PROFIL jsp>2ms metier>25ms total>28ms
 ...
 ```
 
@@ -185,7 +185,7 @@ Afin de faciliter l'extraction de ces données, celles-ci ont intérêts à avoi
 Reprenons les logs 'Accès Web' que nous avons vus plus haut :
 
 ```java
-YYYYMMDDHHmmss.SSS|INFO|IP|10.0.0.1,192.168.0.217|RG|0000001|SH|username|000000000000|RS|0001|PROFIL|VW|2|ms|BS|25|ms|TTL|28|ms
+YYYY-MM-DD HH:mm:ss.SSS|INFO|IP|10.0.0.1,192.168.0.217|RG|0000001|SH|username|000000000000|RS|0001|PROFIL|VW|2|ms|BS|25|ms|TTL|28|ms
 ```
 
 Soit dit en passant, l'utilisation d'outil comme Elasticsearch impose d'avoir une forme de log 'interrogeable'. Ce qui précède est donc une bonne pratique et simplifiera grandement les règles d'extraction de données.
@@ -254,10 +254,10 @@ Les données n'ont pas besoin d'être répliquées d'un fichier à l'autre. La c
 Les logs deviennent ilisibles quand aucun effort n'est fait pour structurer l'information, ou quand des données superflues sont ajoutées. Prenons par exemple le cas de l'exemple ci-dessous, le fichier persistence déjà décrit plus haut. :
 
 ```text
-YYYYMMDDHHmmss.SSS DEBUG [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] PersistenceUserImpl - lireUserById(id:2) 
-YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] SQLEXP - select * from user where id = 2 
-YYYYMMDDHHmmss.SSS DEBUG [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] DATA - {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
-YYYYMMDDHHmmss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] STAT - POOL:2ms PREP:3ms REQT:5ms NETW:10ms TOTL:20ms
+YYYY-MM-DD HH:mm:ss.SSS DEBUG [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] PersistenceUserImpl - lireUserById(id:2) 
+YYYY-MM-DD HH:mm:ss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] SQLEXP - select * from user where id = 2 
+YYYY-MM-DD HH:mm:ss.SSS DEBUG [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] DATA - {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
+YYYY-MM-DD HH:mm:ss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH000000000000|RS0001] STAT - POOL:2ms PREP:3ms REQT:5ms NETW:10ms TOTL:20ms
 ...
 ```
 
@@ -269,10 +269,10 @@ Plusieurs informations sont inutiles et empêchent la lisibilité.
 Cela pourrait donner :
 
 ```text
-YYYYMMDDHHmmss.SSS|DEBUG|0000001|PersistenceUserImpl|lireUserById(id:2) 
-YYYYMMDDHHmmss.SSS|INFO|0000001|SQLEXP| select * from user where id = 2 
-YYYYMMDDHHmmss.SSS|DEBUG|0000001|DATA| {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
-YYYYMMDDHHmmss.SSS|INFO|0000001|STAT|POOL|2|ms|PREP|3|ms|REQT|5|ms|NETW|10|ms|TOTL|20|ms
+YYYY-MM-DD HH:mm:ss.SSS|DEBUG|0000001|PersistenceUserImpl|lireUserById(id:2) 
+YYYY-MM-DD HH:mm:ss.SSS|INFO|0000001|SQLEXP| select * from user where id = 2 
+YYYY-MM-DD HH:mm:ss.SSS|DEBUG|0000001|DATA| {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
+YYYY-MM-DD HH:mm:ss.SSS|INFO|0000001|STAT|POOL|2|ms|PREP|3|ms|REQT|5|ms|NETW|10|ms|TOTL|20|ms
 ...
 ```
 
@@ -282,19 +282,19 @@ C'est quand même un peu plus clair non ?
 La concision permet d'économiser encore de l'espace pour faciliter la lecture. Si je reprends l'exemple ci-dessus :
 
 ```text
-YYYYMMDDHHmmss.SSS|D|0000001|PUI   | lireUserById(id:2) 
-YYYYMMDDHHmmss.SSS|I|0000001|SQLEXP| select * from user where id = 2 
-YYYYMMDDHHmmss.SSS|D|0000001|SQLDAT| {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
-YYYYMMDDHHmmss.SSS|I|0000001|SQLSTA| OK | POOL |2|ms| PREP |3|ms| REQT |5|ms| NETW |10|ms| TOTL |20|ms
+YYYYMMDDHHmmss.SSS| D |0000001|PUI   | lireUserById(id:2) 
+YYYYMMDDHHmmss.SSS| I |0000001|SQLEXP| select * from user where id = 2 
+YYYYMMDDHHmmss.SSS| D |0000001|SQLDAT| {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
+YYYYMMDDHHmmss.SSS| I |0000001|SQLSTA| OK | POOL |2|ms| PREP |3|ms| REQT |5|ms| NETW |10|ms| TOTL |20|ms
 ...
 ```
 Cela améliore encore sensiblement la lisibilité. Si la notion de temps n'est pas indispensable, cela donne :
 
 ```text
-D|0000001|PUI   | lireUserById(id:2) 
-I|0000001|SQLEXP| select * from user where id = 2 
-D|0000001|SQLDAT| {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
-I|0000001|SQLSTA| OK | POOL |2|ms| PREP |3|ms| REQT |5|ms| NETW |10|ms| TOTL |20|ms
+D |0000001|PUI   | lireUserById(id:2) 
+I |0000001|SQLEXP| select * from user where id = 2 
+D |0000001|SQLDAT| {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
+I |0000001|SQLSTA| OK | POOL |2|ms| PREP |3|ms| REQT |5|ms| NETW |10|ms| TOTL |20|ms
 ...
 ```
 
@@ -312,6 +312,7 @@ A condition que le format soit de type CSV (ou UNL), il est possible d'importer 
 * Ouvrir le fichier avec Excel
 
 Enfin, créer un tableau croisé dynamique pour faire des graphiques et des calculs sur ces ensembles de données.
+En parlant, le format de date supporté par Excel est `YYYY-MM-DD HH:mm:ss`. Il faudra donc penser à supprimmer '.SSS'  avant d'importer en CSV. 
 
 ### Niveau de logs supplémentaires
 Il est parfois pratique d'ajouter des niveaux de log supplémentaires en plus des 5 suivants : TRACE, DEBUG, INFO, ERROR, FATAL.
@@ -351,7 +352,7 @@ Les userstory sont une façon de représenter un test ou un traitement. Ils peuv
 log.given("Session : {}", sessionHash);
 log.given("Paramètres : {}", io.getParamValues());
 // Exercise
-log.when(io.getParam("action"));
+log.when("Action " + io.getParam("action"));
 // traitement
 // Verify
 log.then("Success");
@@ -362,9 +363,9 @@ Ce qui pourrait donner :
 
 ```text
 @GIVEN Session : -978897675
-@Given Paramètres : [2,CONSULTERPJ]
- >When CONSULTERPJ
-  -Then Success
+@GIVEN Paramètres : [2,CONSULTERPJ]
+>WHEN Action CONSULTERPJ
+-THEN Success
 ```
 
 ou en faisant un effort de concision :
@@ -372,8 +373,8 @@ ou en faisant un effort de concision :
 ```text
 @ Session : -978897675
 @ Paramètres : [2,CONSULTERPJ]
- > CONSULTERPJ
-  - Success
+> Action CONSULTERPJ
+- Success
 ```
 
 ## De meilleurs logs en pratique
@@ -381,11 +382,11 @@ Au vu des éléments ci-dessus, il se dégage les quelques principes suivants :
 
 ### Classer les catégorie de logs par fichier
 #### http.log
-Ce fichier contriendra les accès http lorsqu'il s'agit d'un application WEB. Il doit contenir la date, le numéro de requête, la méthode utilisée, la ressource demandée et des statistiques de temps de réponse. Lorsque le socle est maîtrisé, il est possible d'ajouter les informations de session et le numéro de requête session. Nous avons choisi de procéder en 2 temps :
+Ce fichier contiendra les accès http lorsqu'il s'agit d'un application WEB. Il doit contenir la date, le numéro de requête, la méthode utilisée, la ressource demandée et des statistiques de temps de réponse. Lorsque le socle est maîtrisé, il est possible d'ajouter les informations de session et le numéro de requête session. Nous avons choisi de procéder en 2 temps :
 
 ```text
-YYYYMMDD HHmmss.SSS|I|0000001| HTTP | IP |10.0.0.1,192.168.0.217| SN |username|000000000000| RS |0001| GET /servlet?action=PROFIL
-YYYYMMDD HHmmss.SSS|I|0000001| STAT | BS |25|ms| VW |2|ms| TL |28|ms
+YYYY-MM-DD HH:mm:ss.SSS| I |0000001| HTTP | IP |10.0.0.1,192.168.0.217| SN |username|000000000000| RS |0001| GET /servlet?action=PROFIL
+YYYY-MM-DD HH:mm:ss.SSS| I |0000001| STAT | BS |25|ms| VW |2|ms| TL |28|ms
 ...
 ```
 à partir de ce fichier, on récupère tous les numéros de requêtes d'une session, 
@@ -394,10 +395,10 @@ YYYYMMDD HHmmss.SSS|I|0000001| STAT | BS |25|ms| VW |2|ms| TL |28|ms
 Ce fichier contiendra le comportement utilisateur. Il doit contenir les actions demandées, la date, le numéro de requête, les paramètres d'entrée et le résultat du traitement.
 
 ```text
-YYYYMMDD HHmmss.SSS|I|0000001| ACTION | PROFIL |{"id"=3, "group"="GSP"}
-YYYYMMDD HHmmss.SSS|I|0000001| RESULT | OK | CD |25|ms| xxx.jsp
-YYYYMMDD HHmmss.SSS|D|0000001| DATA   | {...} <-- données sérialisées à afficher en DEBUG.
-YYYYMMDD HHmmss.SSS|I|0000002| RESULT | KO | CD |4|ms| Action incorrecte 
+YYYY-MM-DD HH:mm:ss.SSS| I |0000001| ACTION | PROFIL |{"id"=3, "group"="GSP"}
+YYYY-MM-DD HH:mm:ss.SSS| I |0000001| RESULT | OK | CD |25|ms| xxx.jsp
+YYYY-MM-DD HH:mm:ss.SSS| D |0000001| DATA   | {...} <-- données sérialisées à afficher en DEBUG.
+YYYY-MM-DD HH:mm:ss.SSS| I |0000002| RESULT | KO | CD |4|ms| Action incorrecte 
 ...
 ```
 
@@ -410,23 +411,25 @@ Ce fichier contiendra l'appel de la couche de service, quand un protole RPC est 
 Ce fichier contiendra les appels de service. Il doit contenir les références de services, la date, le numéro de requête, les paramètres d'entrée et le résultat du traitement.
 
 ```text
-YYYYMMDD HHmmss.SSS|I|0000001| SCEDET | lireProfil |{"id"=3, "group"="GSP"}
-YYYYMMDD HHmmss.SSS|I|0000001| SCERES | lireProfil | OK | SV |20|ms
+YYYY-MM-DD HH:mm:ss.SSS| I |0000001| CALL   | lireProfil |{"id"=3, "group"="GSP"}
+YYYY-MM-DD HH:mm:ss.SSS| I |0000001| RESULT | lireProfil | OK | SCE |20|m
 # ou
-YYYYMMDD HHmmss.SSS|I|0000001| SCERES | lireProfil | KO | SV |2|ms
-YYYYMMDD HHmmss.SSS|D|0000001| SCERET | lireProfil | {...} <-- données sérialisées de retour à afficher en DEBUG. 
+YYYY-MM-DD HH:mm:ss.SSS| I |0000001| RESULT | lireProfil | KO | SCE |2|ms
+YYYY-MM-DD HH:mm:ss.SSS| D |0000001| RETURN | lireProfil | {...} <-- données sérialisées de retour à afficher en DEBUG. 
 ...
 ```
+
+Le marqueur temporel n'est pas obligatoire.
 
 #### persistence.log
 Ce fichier contiendra les appels de la couche persistence. Les seules données importantes sont les requêtes SQL, les données insérées ou modifiées, les statistiques d'appels. 
 
 ```text
-YYYYMMDD HHmmss.SSS|D|0000001|UserPersistenceImpl| lireProfil(id:2) 
-YYYYMMDD HHmmss.SSS|I|0000001|SQLEXP| select * from profil where id = 2 
-YYYYMMDD HHmmss.SSS|D|0000001|SQLDAT| {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
-YYYYMMDD HHmmss.SSS|I|0000001|SQLSTA| OK | POOL |2|ms| PREP |3|ms| REQT |5|ms| NETW |10|ms| TOTL |20|ms
+YYYY-MM-DD HH:mm:ss.SSS| D |0000001|UPI | lireProfil(id:2) 
+YYYY-MM-DD HH:mm:ss.SSS| I |0000001|EXPR| select * from profil where id = 2 
+YYYY-MM-DD HH:mm:ss.SSS| D |0000001|DATA| {"id":2, "name":"Bent", "firstname":"Joshua", "type":5 ...}
+YYYY-MM-DD HH:mm:ss.SSS| I |0000001|STAT| OK | POOL |2|ms| PREP |3|ms| REQT |5|ms| NETW |10|ms| TOTL |20|ms
 ...
 ```
 
-Les données lues et les méthodes appelées sont en DEBUG.
+Les marqueur temporels n'est pas obligatoires. Les données lues et les méthodes appelées sont en DEBUG. Par contre, les données insérée et modifiées sont loggés au niveau INFO.
