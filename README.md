@@ -129,18 +129,18 @@ log.warn("Encodage non spécifié, l'encodage par défaut sélectionné {}", con
 On a parfois tendance à créer des logs de niveau WARN lorsqu'un traitement rencontre une 'erreur' qu'il est capable de gérer. Ce n'est pas un warning. Une erreur fonctionnelle prévisible devrait être de niveau INFO . Comment bien choisir ce qui doit être de niveau WARN ? Examinons les cas suivants : 
 
 1. Avertir de la non présence d'un fichier optionnel
-2. Averissements fonctionnels
+2. Avertissements fonctionnels (ou métier)
 3. Données issues de la BD incomplètes
 4. Indiquer des dégradations de perfomances
 
 Parmis ces 4 situations, lequelles sont des logs de niveau WARN ? La 1, 3 et la 4. En effet, la 2 n'intéresse pas l'exploitation et doit être de niveau INFO (il s'agit du résultat d'un traitement). 
 
-- Des logs ERROR pour avertir la production. En plus d'un message, ils doivent comporter des stacktraces pour faciliter la compréhension de l'erreur. C'est généralement la production qui repère les erreurs. Elle peut toutetefois donner un accès aux logs aux développeurs.
+- Des logs ERROR pour avertir la production. En plus d'un message, ils doivent comporter des stacktraces pour faciliter la compréhension de l'erreur. C'est généralement la production qui repère les erreurs. Elle peut toutefois donner un accès aux logs aux développeurs.
 
 ``` java
 log.error("Lecture du fichier du résultat {} impossible, exception, viewFileName);
 ```
-Les erreurs sont principalement de nature technique, et concerne en majorité des exceptions de type Runtime. Une erreur est le résultat d'une impossibilité de terminer un traitement par suite d'un imprévu technique. Par exemple :
+Les erreurs sont principalement de nature technique, et concerne en majorité des exceptions de type Runtime. Une erreur est une impossibilité de terminer un traitement par suite d'un imprévu technique. Par exemple :
 
 1. Erreur d'accès à la base de données
 2. NullPointerException, ou plus généralement RuntimeException
@@ -179,7 +179,7 @@ L'application devrait :
 ## Besoins du _chef de projet_
 IMO, le chef de projet a besoin de savoir si l'application répond bien aux actions utilisateurs. Il a besoin d'un état de santé, et de statistiques sur les performances de l'application. Il a besoin de savoir la fréquence des erreurs rencontrées. Ces données pourront être transmises à sa hiérarchie.
  
-Le temps de réponse instannée, la consommation mémoire, soit l'état de santé générale de l'application peuvent généralement être fournis par des outils comme JavaMelody. Toutefois certaines données auraient intérêt à se retrouver dans les logs, comme le temps de réponse, la consommation mémoire, etc, données qui pourront ête interrogées plus tard pour établir un historique.
+Le temps de réponse instantanée, la consommation mémoire, ..., c'est-à-dire l'état de santé générale de l'application peuvent généralement être fournis par des outils comme JavaMelody. Toutefois certaines données auraient intérêt à se retrouver dans les logs, comme le temps de réponse, la consommation mémoire, etc, données qui pourront ête interrogées plus tard pour établir un historique.
 
 Afin de faciliter l'extraction de ces données, celles-ci ont intérêts à avoir un format facile à traiter. Par exemple le format UNL.
 Reprenons les logs 'Accès Web' que nous avons vus plus haut :
@@ -217,16 +217,16 @@ Ainsi, les logs de niveau INFO doivent contenir ces informations, de façon à p
 ### Catégories de logs
 Les applications n-tiers structurés à l'aide de pattern ont généralement (plus ou moins) les couches suivantes :
 
-0. L'utilisateur (navigateur ou desktop)
-1. La vue
-2. La commande
-3. Le contrôleur ou le client
-4. Une couche de transport (optionnelle)
-4. Le service
-5. La persistence
-6. Les DAO
-7. La connexion à la base de données
-8. D'eventuels périphériques (imprimantes, périphériques connectés, etc...), ou traitements asynchrones.
+1. L'utilisateur (navigateur ou desktop)
+2. La vue
+3. Le contrôleur (ou le client)
+4. La commande
+5. Une couche de transport (optionnelle)
+6. Le service
+7. La persistence
+8. Les DAO
+9. La connexion à la base de données
+10. D'eventuels périphériques (imprimantes, périphériques connectés, etc...), ou traitements asynchrones.
 
 Chaque couche jourera un rôle différent dans la production de logs. 
 
@@ -305,13 +305,13 @@ On utilise généralement le ***quatuor RELK*** ou le ***trio ELK***, sinon cela
 * Import dans un outil, par exemple un tableur
 
 A condition que le format soit de type CSV (ou UNL), il est possible d'importer ces données dans _Excel_ comme suit :
-* Renommer le fichier en .csv
+* Renommer le fichier déj filtré en '.csv'
 * Ajouter une ligne au début du fichier:
  	
 	sep=|
 * Ouvrir le fichier avec Excel
+* Créer un tableau croisé dynamique pour faire des graphiques et des calculs sur ces ensembles de données.
 
-Enfin, créer un tableau croisé dynamique pour faire des graphiques et des calculs sur ces ensembles de données.
 En parlant, le format de date supporté par Excel est `YYYY-MM-DD HH:mm:ss`. Il faudra donc penser à supprimmer '.SSS'  avant d'importer en CSV. 
 
 ### Niveau de logs supplémentaires
@@ -419,7 +419,7 @@ YYYY-MM-DD HH:mm:ss.SSS| D |0000001| RETURN | lireProfil | {...} <-- données s�
 ...
 ```
 
-Le marqueur temporel n'est pas obligatoire.
+Les marqueurs temporels ne sont pas obligatoires. Même si cela prend un peu plus de place, je préfère les conserver pour faciliter le classement. 
 
 #### persistence.log
 Ce fichier contiendra les appels de la couche persistence. Les seules données importantes sont les requêtes SQL, les données insérées ou modifiées, les statistiques d'appels. 
@@ -432,4 +432,4 @@ YYYY-MM-DD HH:mm:ss.SSS| I |0000001|STAT| OK | POOL |2|ms| PREP |3|ms| REQT |5|m
 ...
 ```
 
-Les marqueur temporels n'est pas obligatoires. Les données lues et les méthodes appelées sont en DEBUG. Par contre, les données insérée et modifiées sont loggés au niveau INFO.
+Les marqueur temporels ne sont pas obligatoires. Même si cela prend un peu plus de place, je préfère les conserver pour faciliter le classement. Les données lues et les méthodes appelées sont en DEBUG. Par contre, les données insérée et modifiées sont loggés au niveau INFO.
