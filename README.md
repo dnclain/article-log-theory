@@ -36,12 +36,11 @@ Toutefois, aucun n'en fournit le sens. Le tableau ci-dessous fournit un exemple 
 | ERROR    | Exploitant/Développeur | Les erreurs indiquent qu'un traitement n'a pas pu se terminer correctement. Il s'agit toujours d'erreur technique (un fichier non trouvé, une base de données inaccessible, problème de droit, etc...). _Les erreurs fonctionnels pour leur sont de niveau INFO_. **L'exploitant intervient rapidement quand il voit passer des erreurs**. Les erreurs contiennent généralement la pile d'appel, ce qui est très utile pour les développeurs.    |
 | FATAL    | Exploitant             | L'erreur fatale indique que l'application n'a pas pu démarrer ou a du s'arrêter brusquement, suite à une erreur irrécupérable. **L'exploitant intervient immédiatement quand il a une erreur FATAL.**      |
 
-Concernant le niveau DEBUG et TRACE, certains développeurs préfèrent mettre l'algorithme et les données au niveau DEBUG. Ils conservent le niveau TRACE pour des logs dites de construction. Ceux-ci sont généralement inexploitables en production, car trop verbeux et peu formatés. Quelque soit le choix que l'on prendra
+Concernant le niveau DEBUG et TRACE, certains développeurs préfèrent mettre l'algorithme et les données au niveau DEBUG. Ils conservent le niveau TRACE pour des logs dites de construction. Ceux-ci sont généralement inexploitables en production, car trop verbeux et peu formatés. Quelque soit le choix que l'on prendra, l'important est d'avoir le même vocabulaire pour tous les projets d'une équipe.
 
 Par un mécanisme de fitrage, on fixe généralement les logs au niveau 'INFO' lorsque l'application est mise en production. On passe au niveau 'DEBUG' pour consulter les données manipulées, et le niveau 'TRACE' quand un comportement inhabituel est détecté et que les logs 'INFO' ne suffisent pas.
 
-
-Des librairies de logs fournissent les outils pour créer ses propres niveaux de log, par exemple NOTICE ou COMMENT. C'est le cas de log4j2.
+Des librairies de logs fournissent les outils pour créer ses propres niveaux de log, par exemple DATA, NOTICE ou COMMENT. C'est le cas de log4j2.
 
 ### Exemple de logs provenant d'un projet de gestion en java : 
 Voici des logs tels qu'extraites d'un projet. Juste après, nous en tirerons quelques leçons :
