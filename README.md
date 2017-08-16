@@ -24,13 +24,13 @@ La plupart des gestionnaires de log propose par défaut les niveaux de logs suiv
 | Niveau   | Destination directe    | Pertinence |
 | -------- | --------               | --------   |
 | TRACE    | En développement       | Les traces sont utiles en développement uniquement. Il permet de suivre le code lors de séance de débuggage, et sont généralement TRES verbeux. Ces logs doivent être pertinents, soignés et écrits en pensant à la maintenance.      |
-| DEBUG    | Développeur            | Les logs de niveau debug contiennent généralement les données. L'activation du niveau DEBUG a souvent pour effet de ralent l'applicatif.   |
+| DEBUG    | Développeur            | Les logs de niveau debug contiennent généralement les données. L'activation du niveau DEBUG et TRACE a souvent pour effet de ralentir l'applicatif   |
 | INFO     | Developpeur/Autorité   | Les logs de niveau info constitue note récit applicatif. La lecture du log info devrait suffire à savoir ce qui s'est passé dans l 'aplication       |
 | WARN     | Exploitant             | Les warnings indiquent qu'un traitement a pu se faire, mais qu'il aurait pu être optimisé. **Les exploitants pensent qu'ils doivent intervenir dès qu'ils rencontrent un log de ce type**.        |
 | ERROR    | Exploitant/Développeur | Les erreurs indiquent qu'un traitement n'a pas pu se terminer correctement. Il s'agit toujours d'erreur technique (un fichier non trouvé, une base de données inaccessible, problème de droit, etc...). _Les erreurs fonctionnels pour leur sont de niveau INFO_. **L'exploitant intervient rapidement quand il voit passer des erreurs**. Les erreurs contiennent généralement la pile d'appel, ce qui est très utile pour les développeurs.    |
 | FATAL    | Exploitant             | L'erreur fatale indique que l'application n'a pas pu démarrer ou a du s'arrêter brusquement, suite à une erreur irrécupérable. **L'exploitant intervient immédiatement quand il a une erreur FATAL.**      |
 
-Par un mécanisme de fitrage, on fixe généralement les logs au niveau 'INFO' lorsque l'application est mise en production. On passe au niveau 'DEBUG' pour consulter les données manipulés, et le niveau 'TRACE' quand un comportement inhabituel est détecté et que les logs 'INFO' ne suffisent pas.
+Par un mécanisme de fitrage, on fixe généralement les logs au niveau 'INFO' lorsque l'application est mise en production. On passe au niveau 'DEBUG' pour consulter les données manipulées, et le niveau 'TRACE' quand un comportement inhabituel est détecté et que les logs 'INFO' ne suffisent pas.
 
 Des librairies de logs fournissent les outils pour créer ses propres niveaux de log, par exemple NOTICE ou COMMENT. C'est le cas de log4j2.
 
