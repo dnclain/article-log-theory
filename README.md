@@ -13,13 +13,13 @@ Nous verrons dans ce billet que la mise en place de logs 'utiles' se résous rel
 Au cours de notre étude, nous définirons ce qu'est un 'log', nous identifierons les besoins du point de vue des acteurs concernés, et enfin nous proposerons au moins une méthode (parmis tant d'autres) de mise en place de log.
 
 ## Qu'est-ce qu'un log
-Certains amateurs de voyage ont pris l'habitude de consigner leurs aventuresdans un carnet. Ce carnet comportement des faits, les impressions de l'auteur, des photos, et si le carnet est électronique, des vidéos. L'avènement des réseaux sociaux a rendu populaire le partage de 'biographies' en ligne, parfois jusqu'à l'agacement des followers destinataires tellement certains 'tweets' sont futiles. Dans d'autres cas, tellement de photos et de vidéos ont été prises que rares sont ceux qui trouvent le temps d'organiser le récit de leur voyage. On apprécie alors des services comme Flickr(R) qui organisent automatiquement ces médias et simplifie la navigation.
+Certains amateurs de voyage ont pris l'habitude de consigner leurs aventures dans un carnet. Ce carnet comporte des faits, les impressions de l'auteur, des photos, et si le carnet est électronique, des vidéos. L'avènement des réseaux sociaux a rendu populaire le partage de 'biographies' en ligne, parfois jusqu'à l'agacement des followers tellement certains 'tweets' sont futiles. Dans d'autres cas, tellement de photos et de vidéos ont été prises que rares sont ceux qui trouvent le temps d'organiser le récit de leur voyage. On apprécie alors des services comme Flickr(R) qui organisent automatiquement ces médias et simplifie la navigation.
 
-D'une certaine façon, l'analogie du voyage illustre la difficulté de mettre en place des logs de qualité. Un log applicatif est en quelque sorte une autobiographie du déroulement d'une application. La lecture (ou l'analyse) de ce récit doit permettre à un acteur de comprendre ce qui se passe dans l'application.
+D'une certaine façon, l'analogie du voyage illustre la difficulté de mettre en place des logs de qualité. Un log applicatif est en quelque sorte une autobiographie du déroulement d'une application. La lecture (ou l'analyse) de ce récit doit permettre à un acteur de comprendre ce qui se passe dans l'application. Pas assez de logs, et la maintenance est impossible. Trop de logs, et la maintenance devient complexe et décourageante.
 
 Que doit-on mettre dans le récit d'un voyage ? Tout dépend de l'intention du voyageur *ET* du public visé. On ne met pas les mêmes informations quand le récit est pour soi-même, notre famille, nos amis, ou un public d'inconnus sur Internet. Il en est de même pour les logs. Le récit applicatif doit correspondre au besoin du public visé. Les 'purées' (pour ne pas dire diarrhées...) de logs sont généralement illisibles et inexploitables pour TOUS les acteurs. Ce contenu indigeste et puant est le drame des applicatifs produits par certaines sociétés de service. Les logs sont souvent générés automatiquement par les frameworks qui sont rarement des modèles de concision. Enfin, le guide du bon petit logger n'est généralement par fourni au développeur prestataire.
 
-Des outils comme elasticsearch et logstash simplifient l'analyse des logs, mais il n'est pas toujours possible d'avoir une telle architecture, et l'analyse des logs est plus complexe quand ceux-ci ne sont pas standardisés. 
+Des outils comme elasticsearch et logstash simplifient l'analyse des logs, mais il n'est pas toujours possible d'avoir une telle architecture, et l'analyse des logs est plus complexe quand ceux-ci ne sont pas standardisés. Il est toujours bon de rendre les logs lisibles et cohérents à la source.
 
 ## Les niveaux de logs
 La plupart des gestionnaires de log propose par défaut les niveaux de logs suivants : TRACE, DEBUG, INFO, WARN, ERROR, FATAL.
@@ -30,7 +30,7 @@ Toutefois, aucun n'en fournit le sens. Le tableau ci-dessous fournit un exemple 
 | Niveau   | Destination directe    | Pertinence |
 | -------- | --------               | --------   |
 | TRACE    | En développement       | Les traces sont utiles en développement et en maintenance. Il permet de suivre le code lors de séance de débuggage, et sont généralement TRES verbeux. Ces logs doivent être pertinents, soignés et écrits en pensant à la maintenance.      |
-| DEBUG    | Développeur            | Les logs de niveau debug contiennent généralement les données. L'activation du niveau DEBUG et TRACE a souvent pour effet de ralentir l'applicatif   |
+| DEBUG    | Développeur            | Les logs de niveau debug contiennent généralement les données manipulées. L'activation du niveau DEBUG et TRACE a souvent pour effet de ralentir l'applicatif   |
 | INFO     | Developpeur/Autorité   | Les logs de niveau info constitue note récit applicatif. La lecture du log info devrait suffire à savoir ce qui s'est passé dans l 'aplication       |
 | WARN     | Exploitant             | Les warnings indiquent qu'un traitement a pu se faire, mais qu'il aurait pu être optimisé. **Les exploitants pensent qu'ils doivent intervenir dès qu'ils rencontrent un log de ce type**.        |
 | ERROR    | Exploitant/Développeur | Les erreurs indiquent qu'un traitement n'a pas pu se terminer correctement. Il s'agit toujours d'erreur technique (un fichier non trouvé, une base de données inaccessible, problème de droit, etc...). _Les erreurs fonctionnels pour leur sont de niveau INFO_. **L'exploitant intervient rapidement quand il voit passer des erreurs**. Les erreurs contiennent généralement la pile d'appel, ce qui est très utile pour les développeurs.    |
@@ -66,7 +66,7 @@ YYYY-MM-DD_HH:mm:ss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH0000
 ```text
 YYYY-MM-DD_HH:mm:ss.SSS INFO [CACHE|RG0000001] Démarrage de la mise à jour du cache {{{
 YYYY-MM-DD_HH:mm:ss.SSS DEBUG [CACHE|RG0000001] Town [hash=908798678,id=1,label=Paris,cp=...]
-YYYY-MM-DD_HH:mm:ss.SSS DEBUG [CACHE|RG0000001] Town [hash=908798678,id=2,label=Créteil,cp=...]
+YYYY-MM-DD_HH:mm:ss.SSS DEBUG [CACHE|RG0000001] Town [hash=680745609,id=2,label=Créteil,cp=...]
 ...
 YYYY-MM-DD_HH:mm:ss.SSS INFO [CACHE|RG0000001] }}} Fin de la mise à jour du cache : 15565 ms
 ```
@@ -77,18 +77,18 @@ YYYY-MM-DD_HH:mm:ss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH0000
 ...
 ```
 
-#### J'ai des logs, et alors ?
+#### J'ai des logs... c'est bon non ?
 Que penser des logs ci-dessus ? Il s'agit de ma première tentative d'organiser les logs. En effet, dans notre équipe, aucune règle de log n'existait. Il fallait bien commencer par quelque chose. 
 
-Nous avons tenté de classer, d'organiser et de créer des logs du point de vue utilisateur. Le but recherché était de pouvoir lire les logs comme un roman. Pourtant il faut le reconnaître, ces logs sont illisibles... Beaucoup d'informations sont redondantes et il est difficile de retrouver ce qui est réellement nécessaire pour la maintenance. Par exemple, certaines phrases en langage naturel sont superflues.
+Nous avons tenté de classer, d'organiser et de créer des logs du point de vue utilisateur. Le but recherché était de pouvoir lire les logs comme un roman. Pourtant il faut le reconnaître, ces logs sont complètement illisibles... Beaucoup d'informations sont redondantes et il est difficile de retrouver ce qui est réellement nécessaire pour la maintenance. Par exemple, certaines phrases en langage naturel sont superflues.
 
 Par ailleurs, les entêtes censées permettre d'associer les logs répartis sur plusieurs fichiers sont trop longues.
 
 L'application en question étant très sollicitée, la quantité de logs présents rend la lecture encore plus compliquée. Il n'est pas possible de réduire le nombre de logs, mais il devrait être possible d'en faciliter la lecture.
 
-Enfin, une ligne de log ne peut pas être facilement analysé. Par exemple, nous avons voulu extraire le temps de réponse et le nombre de connexion distinctes sur une période données. Pour cela, il a fallu reformater manuellement les logs d'Accès Web dans un format proche du CSV, puis l'importer dans Excel. 
+Enfin, une ligne de log ne peut pas être facilement analysé. Par exemple, nous avons voulu extraire le temps de réponse et le nombre de connexion distinctes sur une période données. Pour cela, il a fallu reformater manuellement les logs d'Accès Web dans un format proche du CSV, puis l'importer dans Excel. (ok... on aurait pu le faire avec logstash, mais nous n'avons pas ces outils en production.. snif)
 
-Je travaille avec [gitea](https://gitea.io/) depuis quelques temps, et je dois avouer que les logs produits par cette application sont exemplaires. Il y a ni trop ni trop peu d'informations. Il est facile d'associer les logs répartis sur 3 fichiers (exceptés pour les logs SQL), et aucune information n'est redondante. Cela faisait quelques temps que nous voulions fixer une norme de 'logging', et je crois bien avoir trouvé une excellente source d'inspiration.
+Quelques leçons : Les logs devraient être lisibles facilement avec un simple éditeur de texte. Il ne devrait y avoir ni trop ni trop peu d'informations. Il devrait être facile d'associer les logs répartis sur plusieurs fichiers et enfin, éviter comme la peste de redonder l'information.
 
 Nous complétons les logs par [javamelody](https://github.com/javamelody/javamelody/wiki) comme outils de monitoring et d'analyse. Nous devrons donc veiller à ne pas reproduire dans les logs ce qui revient à javamelody.
 
