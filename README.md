@@ -1,10 +1,10 @@
-# bofself-poc-log
+# Article-log-theory
 
-La maintenance des projets informatiques nécessite la mise en place de logs, des informations textuelles ou 'traces' qui seront disponibles dans des fichiers, des bases de données, de façon persistantes ou éphémères. Ces données textuelles sont archivées pour consultation, généralement compressées, et sont accessibles à la production, aux développeurs, mais aussi à la chefferie de projet, et à la maîtrise d'ouvrage.
+La maintenance des projets informatiques nécessite la mise en place de logs, des informations textuelles ou 'traces' qui seront disponibles dans des fichiers ou des bases de données, de façon persistantes ou éphémères. Ces données textuelles sont archivées pour consultation, généralement compressées, et sont accessibles à la production, aux développeurs, mais aussi à la chefferie de projet, et à la maîtrise d'ouvrage.
 
 Tous les projets informatiques ont besoin de produire des logs, ne serait-ce que pour assurer le débogage. Mais voilà, il en existe une telle diversité, qu'il semble impossible de proposer des règles universelles de production de logs. Peut-être bien... Qui n'a jamais produit de logs qui au final ne sont jamais lus, parce que trop verbeux ou tout simplement illisibles...  
 
-Nous verrons dans ce billet que la mise en place de logs 'utiles' se résous relativement facilement à l'aide de 3 angles d'attaques :
+Nous verrons dans ce billet que la mise en place de logs 'utiles' se résous relativement facilement à l'aide de 4 angles d'attaques :
 
 1) Donner un sens à chaque niveau de log (TRACE, DEBUG, INFO, ...)
 2) Définir qui est le destinataire des logs
@@ -18,7 +18,7 @@ Certains amateurs de voyage ont pris l'habitude de consigner leurs aventures dan
 
 D'une certaine façon, l'analogie du voyage illustre la difficulté de mettre en place des logs de qualité. Un log applicatif est en quelque sorte une autobiographie du déroulement d'une application. La lecture (ou l'analyse) de ce récit doit permettre à un acteur de comprendre ce qui se passe dans l'application. Pas assez de logs, et la maintenance est quasi impossible. Trop de logs, et la maintenance devient complexe et décourageante.
 
-Que doit-on mettre dans le récit d'un voyage ? Tout dépend de l'intention du voyageur *ET* du public visé. On ne met pas les mêmes informations quand le récit est pour soi-même, notre famille, nos amis, ou un public d'inconnus sur Internet. Il en est de même pour les logs. Le récit applicatif doit correspondre au besoin du public visé. Les 'purées' (pour ne pas dire diarrhées...) de logs sont généralement illisibles et inexploitables pour TOUS les acteurs. Ce contenu indigeste et puant est le drame des applicatifs produits par certaines sociétés de service. Les logs sont souvent générés automatiquement par les frameworks qui sont rarement des modèles de concision. Enfin, le guide du bon petit logger n'est généralement par fourni au développeur prestataire.
+Que doit-on mettre dans le récit d'un voyage ? Tout dépend du public visé *ET* de l'intention du voyageur. On ne met pas les mêmes informations quand le récit est pour soi-même, notre famille, nos amis, ou un public d'inconnus sur Internet. Il en est de même pour les logs. Le récit applicatif doit correspondre au besoin du public visé. Les 'purées' (pour ne pas dire diarrhées...) de logs sont généralement illisibles et inexploitables pour TOUS les acteurs. Ce contenu indigeste et puant est le drame des applicatifs produits par certaines sociétés de service. Les logs sont souvent générés automatiquement par les frameworks qui sont rarement des modèles de concision. Enfin, le guide du bon petit logger n'est généralement par fourni au développeur prestataire.
 
 Des outils comme elasticsearch et logstash simplifient bien sûr l'analyse des logs, mais il n'est pas toujours possible d'avoir une telle architecture, et l'analyse des logs est plus complexe quand ceux-ci ne sont pas standardisés. Il est toujours bon de rendre les logs lisibles et cohérents à la source.
 
@@ -32,18 +32,18 @@ Toutefois, aucun n'en fournit le sens. Le tableau ci-dessous fournit un exemple 
 
 | Niveau   | Destination directe    | Pertinence |
 | -------- | --------               | --------   |
-| TRACE    | Développeur       		| Les traces sont utiles en développement et en maintenance. Il permet de suivre le déroulement des algorythmes lors de séance de débuggage, et sont généralement TRES verbeux. Ces logs doivent être pertinents, soignés et écrits en pensant à la maintenance, ce qui veut dire que ce ne sont pas des logs FOURRE-TOUT.      |
-| DEBUG    | Développeur            | Les logs de niveau debug contiennent généralement les *données* manipulées, et les étapes algorythmiques clé. Ces logs doivent être pertinents, soignés et écrits en pensant à la maintenance. L'activation des niveaux DEBUG et/ou TRACE a souvent pour effet de ralentir l'applicatif.   |
-| INFO     | Developpeur/Autorité   | Les logs de niveau info constitue note récit applicatif. La lecture du log info devrait suffire à savoir ce qui s'est passé dans l 'aplication du point de vue métier.      |
+| TRACE    | Développeur       		| Les traces sont utiles en développement et en maintenance. Il permet de suivre le déroulement des algorithmes lors des séances de débuggage, et sont généralement TRES verbeux. Ces logs doivent être pertinents, soignés et écrits en pensant à la maintenance, ce qui veut dire que ce ne sont pas des logs FOURRE-TOUT.      |
+| DEBUG    | Développeur            | Les logs de niveau debug contiennent généralement les *données* manipulées, et les étapes algorithmiques clé. Ces logs doivent être pertinents, soignés et écrits en pensant à la maintenance. L'activation des niveaux DEBUG et/ou TRACE a souvent pour effet de ralentir l'applicatif.   |
+| INFO     | Developpeur/Autorité   | Les logs de niveau info constitue note récit applicatif 'public'. La lecture du log info devrait suffire à savoir ce qui s'est passé dans l 'aplication du point de vue métier.      |
 | WARN     | Exploitant             | Les warnings indiquent qu'un traitement a pu se faire, mais qu'il aurait pu être optimisé. **Les exploitants pensent qu'ils doivent intervenir dès qu'ils rencontrent un log de ce type**.        |
-| ERROR    | Exploitant/Développeur | Les erreurs indiquent qu'un traitement n'a pas pu se terminer correctement. Il s'agit toujours d'erreur technique (un fichier non trouvé, une base de données inaccessible, problème de droit, etc...). _Les erreurs fonctionnels pour leur sont de niveau INFO_. **L'exploitant intervient rapidement quand il voit passer des erreurs**. Les erreurs contiennent généralement la pile d'appel, ce qui est très utile pour les développeurs.    |
+| ERROR    | Exploitant/Développeur | Les erreurs indiquent qu'un traitement n'a pas pu se terminer correctement. Il s'agit toujours d'erreur technique (un fichier non trouvé, une base de données inaccessible, problème de droit, etc...). _Les erreurs fonctionnels (càd le résultat d'un traitement) pour leur part sont de niveau INFO_. **L'exploitant intervient rapidement quand il voit passer des erreurs**. Les erreurs contiennent généralement la pile d'appel, ce qui est très utile pour les développeurs.    |
 | FATAL    | Exploitant             | L'erreur fatale indique que l'application n'a pas pu démarrer ou a du s'arrêter brusquement, suite à une erreur irrécupérable. **L'exploitant intervient immédiatement quand il a une erreur FATAL.**      |
 
-Par un mécanisme de fitrage, on fixe généralement les logs au niveau 'INFO' lorsque l'application est mise en production. On passe au niveau 'DEBUG' pour consulter les données manipulées et les étapes algorythmiques clé, et le niveau 'TRACE' quand un comportement inhabituel est détecté et que les logs 'DEBUG' ou 'INFO' ne suffisent pas.
+Par un mécanisme de fitrage, on fixe généralement les logs au niveau 'INFO' lorsque l'application est mise en production. On passe au niveau 'DEBUG' pour consulter les données manipulées et les étapes algorithmiques clé, et au niveau 'TRACE' quand un comportement inhabituel est détecté et que les logs 'DEBUG' ou 'INFO' ne suffisent pas.
 
-Plus un niveau de log est courant, plus le message qu'il porte doit être synthétique.
+	Plus un niveau de log est courant, plus le message qu'il porte doit être synthétique.
 
-Des librairies de logs fournissent les outils pour créer ses propres niveaux de log, par exemple DATA, NOTICE ou COMMENT. C'est le cas de log4j2.
+Certaines librairies de logs fournissent les outils pour créer ses propres niveaux de log, par exemple DATA, NOTICE ou COMMENT. C'est le cas de log4j2.
 
 ### Exemple de logs provenant d'un projet de gestion en java : 
 Voici de (mauvais) logs tels qu'extraites d'un projet. Juste après, nous en tirerons quelques leçons :
@@ -81,9 +81,9 @@ YYYY-MM-DD_HH:mm:ss.SSS INFO [username|IP10.0.0.1,192.168.0.217|RG0000001|SH0000
 ```
 
 #### J'ai des logs... c'est bon non ?
-Et non, ce n'est pas bon... Que penser des logs ci-dessus ? Il s'agit de notre première tentative d'organiser les logs.
+Et non, ce n'est pas bon... Que penser des logs ci-dessus ? Il s'agit de notre première tentative d'organiser nos logs.
 
-Nous avons tenté de classer, d'organiser et de créer des logs du point de vue utilisateur. Le but recherché était de pouvoir lire les logs comme un roman. Pourtant il faut le reconnaître, ces logs sont complètement illisibles... Beaucoup d'informations sont redondantes et il est difficile de retrouver ce qui est réellement nécessaire pour la maintenance. Par exemple, certaines phrases en langage naturel sont superflues.
+Nous avons tenté de classer, d'organiser et de créer des logs du point de vue utilisateur. Le but recherché était de pouvoir lire les logs comme un roman. Pourtant il faut le reconnaître, ces logs sont complètement illisibles..., ou plus exactement : rien ne saute aux yeux en première lecture. L'information importantes, nécessaire à la maintenance, est noyée avec des informations redondantes. Par exemple, certaines phrases en langage naturel sont superflues.
 
 Par ailleurs, les entêtes censées permettre d'associer les logs répartis sur plusieurs fichiers sont trop longues.
 
@@ -91,7 +91,7 @@ L'application en question étant très sollicitée, la quantité de logs présen
 
 Enfin, une ligne de log ne peut pas être facilement analysé. Par exemple, nous avons voulu extraire le temps de réponse et le nombre de connexion distinctes sur une période données. Pour cela, il a fallu reformater manuellement les logs d'Accès Web dans un format proche du CSV, puis l'importer dans Excel. (ok... on aurait pu le faire avec logstash, mais nous n'avons pas encore ces outils en production.. snif)
 
-Quelques leçons : Les logs devraient être lisibles facilement avec un simple éditeur de texte. Il ne devrait y avoir ni trop ni trop peu d'informations. Il devrait être facile d'associer les logs répartis sur plusieurs fichiers. Il est indispensable d'éviter comme la peste de redonder l'information. Enfin, il convient de privilégier des logs synthétiques plutôt que des phrases en langage naturel.
+Quelques leçons : Les logs devraient être lisibles facilement avec un simple éditeur de texte. Il ne devrait y avoir ni trop ni trop peu d'informations. Il devrait être facile d'associer les logs répartis sur plusieurs fichiers. Il est indispensable d'éviter de redonder l'information. Enfin, il convient de privilégier des logs synthétiques plutôt que des phrases en langage naturel.
 
 Nous avons pris l'habitude d'installer un outils de monitoring sur nos projets web en JAVA : [javamelody](https://github.com/javamelody/javamelody/wiki). Nous devrons donc veiller à ne pas reproduire dans les logs ce qui revient à javamelody.
 
@@ -125,14 +125,13 @@ log.debug("Lecture fichier {} terminée. Taille:{}", fileName, size);
 ```
 De même, les logs debug peuvent être assez nombreuses. L'utilisation de `log.isDebugEnabled()` ou d'une librairie qui teste au préalable si le niveau DEBUG est actif préservera les performances.
 
-- Des logs INFO pour présenter le résultat d'un traitement. C'est eux le 'récit public' de notre voyage.
+- Des logs INFO pour présenter les étapes et le résultat d'un traitement métier. C'est eux le 'récit public' de notre voyage, celui qu'on diffuse sur un blog, ou sur facebook par exemple.
 
 ``` java
 log.info("Nouvel utilisateur : {}", newUser);
 // traitement
 log.info("Résultat : {}", result);
 ```
-
 La lecture des logs infos permet de savoir précisément les actions utilisateur et la réponse de l'application. Sa lecture doit permettre de suivre un utilisateur. Les erreurs fonctionnelles sont de niveau INFO. Il convient d'éviter les redondances, et d'être concis. Une information qui peut être déduite n'a pas besoin d'être détaillée textuellement. 
 
 - Des logs WARN pour attirer la vigilance de la production. La présence de WARN interpelle forcément la production. Ces logs doivent donc être soignés et ciblés.
@@ -140,7 +139,7 @@ La lecture des logs infos permet de savoir précisément les actions utilisateur
 ```java
 log.warn("Encodage non spécifié, l'encodage par défaut sélectionné {}", config.getEncoding());
 ```
-On a parfois tendance à créer des logs de niveau WARN lorsqu'un traitement rencontre une 'erreur' qu'il est capable de gérer. Ce n'est pas un warning. Une erreur fonctionnelle prévisible devrait être de niveau INFO . Comment bien choisir ce qui doit être de niveau WARN ? Examinons les cas suivants : 
+On a parfois tendance à créer des logs de niveau WARN lorsqu'un traitement rencontre une 'erreur' qu'il est capable de gérer. Ce n'est pas un warning (selon la définition plus haut qu'on lui a attribué dans le cadre de ce document). Une erreur fonctionnelle prévisible devrait être donc de niveau INFO . Comment bien choisir ce qui doit être de niveau WARN ? Examinons les cas suivants : 
 
 1. Avertir de la non présence d'un fichier optionnel
 2. Avertissements fonctionnels (ou métier)
@@ -149,7 +148,7 @@ On a parfois tendance à créer des logs de niveau WARN lorsqu'un traitement ren
 
 Parmis ces 4 situations, lequelles sont des logs de niveau WARN ? La 1, 3 et la 4. En effet, la 2 n'intéresse pas l'exploitation et doit être de niveau INFO (il s'agit du résultat d'un traitement). 
 
-- Des logs ERROR pour avertir la production. En plus d'un message, ils doivent comporter des stacktraces pour faciliter la compréhension de l'erreur. C'est généralement la production qui repère les erreurs. Elle peut toutefois donner aux développeurs l'accès aux logs.
+- Des logs ERROR pour avertir la production. En plus d'un message, ils doivent comporter des stacktraces pour faciliter l'identification de l'erreur. C'est généralement la production qui repère les erreurs. Elle peut toutefois donner aux développeurs un accès aux logs.
 
 ``` java
 log.error("La lecture du fichier {} a échoué, exception, viewFileName);
@@ -193,13 +192,13 @@ L'application devrait :
 ## Besoins du _chef de projet_
 IMO, le chef de projet a besoin de savoir si l'application répond bien aux actions utilisateurs. Il a besoin d'un état de santé, et de statistiques sur les performances de l'application. Il a besoin de savoir la fréquence des erreurs rencontrées. Ces données pourront être transmises à sa hiérarchie.
  
-Le temps de réponse instantanée, la consommation mémoire, ..., c'est-à-dire l'état de santé générale de l'application peuvent généralement être fournis par des outils comme JavaMelody. Toutefois certaines données auraient intérêt à se retrouver dans les logs, comme le temps de réponse, la consommation mémoire, etc, données qui pourront ête interrogées plus tard pour établir un historique.
+Le temps de réponse instantanée, la consommation mémoire, ..., c'est-à-dire l'état de santé générale de l'application peuvent généralement être fournis par des outils comme JavaMelody. Toutefois certaines données auraient intérêt à se retrouver dans les logs, comme le temps de réponse, la consommation mémoire, etc, données qui pourront ête interrogées plus tard.
 
 Afin de faciliter l'extraction de ces données, celles-ci ont intérêts à avoir un format facile à traiter. Par exemple le format UNL.
 Reprenons les logs 'Accès Web' que nous avons vus plus haut, essayons par exemple :
 
 ```java
-YYYY-MM-DD HH:mm:ss.SSS|INFO|IP|10.0.0.1,192.168.0.217|RG|0000001|SH|username|000000000000|RS|0001|PROFIL|VW|2|ms|BS|25|ms|TTL|28|ms
+YYYY-MM-DD HH:mm:ss.SSS | INFO | IP | 10.0.0.1,192.168.0.217 | RG | 0000001 | SH | username | 000000000000 | RS | 0001| PROFIL | VW| 2 | ms | BS | 25 | ms | TTL | 28 | ms
 ```
 
 Soit dit en passant, l'utilisation d'outil comme Elasticsearch impose d'avoir une forme de log 'interrogeable'. Ce qui précède est donc une bonne pratique et simplifiera grandement les règles d'extraction de données.
@@ -225,7 +224,7 @@ Les autorités ont parfois besoin de savoir :
 * Les opérations effectuées par un utilisateur donné
 * Les données manipulées
 
-Ainsi, les logs de niveau INFO doivent contenir ces informations, de façon à pouvoir être lu comme un roman. Les données insérées ou mises à jour doivent être loggées de façon à pouvoir défaire des opérations jugées malveillantes si nécessaire.
+Ainsi, les logs de niveau INFO doivent contenir ces informations. Les données insérées, mises à jour ou supprimées doivent être loggées de façon à pouvoir défaire des opérations jugées malveillantes si nécessaire.
 
 ## Autres considérations
 ### Catégories de logs
@@ -246,7 +245,7 @@ Chaque couche jourera un rôle différent dans la production de logs.
 
 En fonction des besoins détaillés plus haut dans le document, il en ressort les catégories suivantes :
 - Protocole HTTP ou autre (clic sur la Vue)
-- Commande utilisateur (les opérations demandées, et les données envoyées ou reçus).
+- Commande utilisateur (les opérations demandées, les données envoyées ou reçus et le résultat du traitement).
 - La couche transport si présente (la couche transport sert à implémenter les protocoles d'appels RPC)
 - Les services appelés
 - La persistence (SQL, données modifiées).
@@ -254,14 +253,14 @@ En fonction des besoins détaillés plus haut dans le document, il en ressort le
 - Les erreurs
 
 Une ou plusieurs catégories peut être envoyé dans un même fichier, ou un fichier distinct :
-- general
-- http ou view
-- userstory
-- transport
-- business
-- persistence (catégories : sqlstat, sqldata, sqlexp)
-- error
-- cache, device-xxx, resultat, ...
+- general.log
+- http ou view.log
+- userstory.log
+- transport.log
+- business.log
+- persistence.log (catégories : sqlstat, sqldata, sqlexp)
+- error.log
+- cache.log, device-xxx, resultat, ...
 
 Les données n'ont pas besoin d'être répliquées d'un fichier à l'autre. La combinaison des données entre les fichiers permet de déduire et de retrouver les informations. 
 
@@ -341,13 +340,13 @@ Il est même possible de modifier les logs par défaut, en modifiant leur nom :
 |DEBUG|DATA|
 |-------------|-------------|
 
-Afin de garder une cohérence avec d'autres projets, nous préférons utiliser les catégories de logs, plutôt que des niveaux de logs supplémentaires. 
+Afin de garder une cohérence avec d'autres projets, nous utilisons les catégories (un nom spécial que l'on donne au logger) de logs, plutôt que des niveaux de logs supplémentaires. 
 
-Pour encore plus de souplesse, nous une API dédiée pourd des cas d'utilisation courants : 
+Pour encore plus de souplesse, nous avons développé une API dédiée pour des cas d'utilisation courants : 
 
 #### Début et fin de traitement
 ```java
-FuncId func = log.startFunc("Ajout de PJ de type {}, de nom {} et de taille {} Mo", fileType, fileName, fileSizeMB);
+FuncId func = log.start("Ajout de PJ de type {}, de nom {} et de taille {} Mo", fileType, fileName, fileSizeMB);
 // traitement
 log.done(fundId, "Ajout {} OK.", fileName)
 // ou 
@@ -433,7 +432,7 @@ YYYY-MM-DD HH:mm:ss.SSS| D |0000001| RETURN | lireProfil | {...} <-- données s�
 ...
 ```
 
-Les marqueurs temporels ne sont pas obligatoires. Même si cela prend un peu plus de place, je préfère les conserver pour faciliter le classement. 
+Les marqueurs temporels ne sont pas toujours obligatoires. Même si cela prend un peu plus de place, pour ma part, je préfère les conserver pour faciliter le classement entre les fichiers. 
 
 #### persistence.log
 Ce fichier contiendra les appels de la couche persistence. Les seules données importantes sont les requêtes SQL, les données insérées ou modifiées et les statistiques d'appels. 
@@ -446,15 +445,15 @@ YYYY-MM-DD HH:mm:ss.SSS| I |0000001|STAT| OK | POOL |2|ms| PREP |3|ms| REQT |5|m
 ...
 ```
 
-Les marqueur temporels ne sont pas obligatoires. Même si cela prend un peu plus de place, je préfère les conserver pour faciliter le classement. Les données lues et les méthodes appelées sont en DEBUG. Par contre, les données insérée et modifiées sont loggés au niveau INFO.
+Les marqueur temporels ne sont pas toujours obligatoires. Même si cela prend un peu plus de place, je préfère les conserver pour faciliter le classement. Les données lues et les méthodes appelées sont en DEBUG. Par contre, les données insérée et modifiées sont loggés au niveau INFO.
 
 # Conclusion
 Nous avons vu les quelques principes qui permettent aux logs d'être bien plus efficientes :
 
 1) Donner un sens à chaque niveau de log (TRACE, DEBUG, INFO, ...)
-> Avoir une définition commune des logs permet de garder la même cohérence d'un bout à l'autre de l'application.
+> Avoir une définition commune des logs permet de garder la même cohérence d'un bout à l'autre de l'application, et entre les applications d'un équipe.
 
-2) Définir qui est le destinataire des logs
+2) Définir qui sont les destinataires des logs
 > On est ainsi capable de savoir quel niveau et quelle quantité d'information il faut produire. 
 > Les logs doivent être lisibles à la source, sans avoir besoin d'un outils RELK. Un éditeur de texte devrait suffire. 
 > Plus les logs se produisent souvent, plus ils doivent être concis et synthétiques.
@@ -463,7 +462,7 @@ Nous avons vu les quelques principes qui permettent aux logs d'être bien plus e
 3) Découper les logs par couches applicatives
 > La plupart des applications n-tiers comportent plus ou moins les mêmes couches applicatives. L'idée n'est pas de créer un fichier de log par couche, mais d'attribuer à des logs une catégorie, un nom, et de lui donner un sens applicatif, généralement calqué sur la couche application sur laquelle le log se produit.
 
-4) Utiliser une API dédiée 
+4) Utiliser une API dédiée adaptée aux règles de votre équipe
 > Il s'agit généralement d'un wrap autour de la librairie de logs utilisés pour rendre prévisible et standardisé la production de logs. Nous en avons vu un petit aperçu. Un autre billet détaillera un exemple d'API possible autour de log4j2 par exemple.  
 
 N'hésitez pas à réagir. Votre expérience sera utile à tous les lecteurs.
