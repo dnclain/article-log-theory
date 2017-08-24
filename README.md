@@ -466,3 +466,5 @@ Nous avons vu les quelques principes qui permettent aux logs d'être bien plus e
 > Il s'agit généralement d'un wrap autour de la librairie de logs utilisés pour rendre prévisible et standardisé la production de logs. Nous en avons vu un petit aperçu. Un autre billet détaillera un exemple d'API possible autour de log4j2 par exemple.  
 
 N'hésitez pas à réagir. Votre expérience sera utile à tous les lecteurs.
+
+David N. C.
