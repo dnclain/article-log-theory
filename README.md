@@ -467,4 +467,4 @@ Nous avons vu les quelques principes qui permettent aux logs d'être bien plus e
 
 N'hésitez pas à réagir. Votre expérience sera utile à tous les lecteurs.
 
-David N. C.
+David N. Clain
