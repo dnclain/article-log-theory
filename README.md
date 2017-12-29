@@ -258,7 +258,7 @@ En fonction des besoins détaillés plus haut dans le document, il en ressort le
 - Un fichier par périphérique, ou par type de traitement asynchrone
 - Les erreurs
 
-Une ou plusieurs catégories peut être envoyé dans un même fichier, ou un fichier distinct :
+Une ou plusieurs catégories peuvent être envoyées dans un même fichier, ou un fichier distinct :
 - general.log
 - http ou view.log
 - userstory.log
@@ -464,7 +464,7 @@ Les marqueur temporels ne sont pas toujours obligatoires. Même si cela prend un
 Nous avons vu les quelques principes qui permettent aux logs d'être bien plus efficientes :
 
 1) Donner un sens à chaque niveau de log (TRACE, DEBUG, INFO, ...)
-> Avoir une définition commune des logs permet de garder la même cohérence d'un bout à l'autre de l'application, et entre les applications d'un équipe.
+> Avoir une définition commune des logs permet de garder la même cohérence d'un bout à l'autre de l'application, et entre les applications d'une ou plusieurs équipes.
 
 2) Définir qui sont les destinataires des logs
 > On est ainsi capable de savoir quel niveau et quelle quantité d'information il faut produire. 
